@@ -61,4 +61,32 @@ class Task {
   }
 }
 
+//get all elements IIFE
+const DOM = (() =>{
+  const sidebar = document.querySelector(".sidebar");
+  const plus = document.querySelector("#plus");
+  const add_task = document.querySelector("#add_task");
+  const form = document.querySelector("form");
+  const add_task_cont = document.querySelector(".add_task_cont");
+  return {
+    sidebar, plus, form, add_task, add_task_cont
+  };
+})();
+DOM.plus.addEventListener("mouseover", () =>{
+  DOM.add_task.style.color = "var(--redColor)";
+})
+DOM.plus.addEventListener("mouseleave", ()=>{
+  DOM.add_task.style.color = "gray";
+})
+DOM.plus.addEventListener("click", () =>{
+  DOM.form.classList.remove("hidden");
+  DOM.add_task_cont.classList.add("hidden");
+})
+
+
+
+
+
+
+
 let mainTasks = [];

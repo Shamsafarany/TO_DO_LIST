@@ -12,9 +12,12 @@
         <h1>Today</h1>
         <div class="task-list">tasks list goes here</div>
         <hr />
-        <div id="plus">&plus;</div>
-        <h5 id="add_task">Add Task</h5>
-        <form action="">
+        <div class="add_task_cont">
+          <div id="plus">+</div>
+          <h5 id="add_task">Add Task</h5>
+        </div>
+
+        <form action="" class="hidden">
           <div class="add_task_display">
             <input
               type="text"
@@ -41,12 +44,14 @@
           <hr />
           <div class="submit-cont">
             <div class="projects">
-              <img src="../images/inbox_8299973.png">
+              <img src="../images/inbox_8299973.png" />
               Inbox
             </div>
             <div class="buttons">
               <button class="buttons" id="cancel">Cancel</button>
-              <button type="submit" class="buttons" id="submit">Add Task</button>
+              <button type="submit" class="buttons" id="submit">
+                Add Task
+              </button>
             </div>
           </div>
         </form>

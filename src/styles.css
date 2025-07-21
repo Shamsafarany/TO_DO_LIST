@@ -42,7 +42,7 @@ body {
   color: var(--redColor);
   display: inline;
   cursor: pointer;
-  padding: 5px 5px;
+  font-size: 20px;
 }
 #plus:hover {
   background-color: var(--redColor);
@@ -60,7 +60,6 @@ form {
   padding: 7px 10px;
   border-radius: 10px;
   padding-bottom: 0;
-  display: none;
 }
 #title {
   border: none;
@@ -147,4 +146,11 @@ img {
 }
 .projects:hover {
   background-color: rgb(230, 225, 225);
+}
+
+.hidden{
+    display: none;
+}
+.show{
+    display: block;
 }
