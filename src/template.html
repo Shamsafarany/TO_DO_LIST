@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>To_DO_List</title>
+  </head>
+  <body>
+    <div class="sidebar"></div>
+    <div class="body-cont">
+      <div class="body">
+        <h1>Today</h1>
+        <div class="task-list">tasks list goes here</div>
+        <hr />
+        <div id="plus">&plus;</div>
+        <h5 id="add_task">Add Task</h5>
+        <form action="">
+          <div class="add_task_display">
+            <input
+              type="text"
+              placeholder="Plan team lunch Jan 10 at 12:30pm"
+              id="title"
+              required
+            />
+            <input type="text" placeholder="Description" id="description" />
+            <div class="cards">
+              <div class="card" id="date">
+                <img
+                  style="color: green"
+                  src="../images/calendar_7173018.png"
+                />
+                Today
+                <span id="remove">&times;</span>
+              </div>
+              <div class="card" id="priority">
+                <img src="../images/flag_1549459.png" />
+                Priority
+              </div>
+            </div>
+          </div>
+          <hr />
+          <div class="submit-cont">
+            <div class="projects">
+              <img src="../images/inbox_8299973.png">
+              Inbox
+            </div>
+            <div class="buttons">
+              <button class="buttons" id="cancel">Cancel</button>
+              <button type="submit" class="buttons" id="submit">Add Task</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>
