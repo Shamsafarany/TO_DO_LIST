@@ -75,8 +75,8 @@ form {
   outline: none;
   letter-spacing: 0.5px;
 }
-#description::placeholder{
-    color:rgb(165, 160, 160);
+#description::placeholder {
+  color: rgb(165, 160, 160);
 }
 .cards {
   display: flex;
@@ -93,6 +93,10 @@ form {
   justify-content: center;
   align-items: center;
   gap: 5px;
+  cursor: pointer;
+}
+.selected > img {
+  width: 13px;
 }
 .card:hover {
   background-color: rgb(220, 216, 216);
@@ -158,11 +162,32 @@ img {
   display: block;
 }
 select {
-  
   appearance: none;
   border: none;
   outline: none;
 }
 select:hover {
   background-color: rgb(220, 216, 216);
+}
+
+.custom-select {
+  position: relative;
+}
+.options {
+  position: absolute;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  top:100%;
+  margin-top: 1px;
+}
+.option{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    color: black;
+}
+.option:hover{
+    background-color: rgb(225, 222, 222);
 }

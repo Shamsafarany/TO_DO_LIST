@@ -1,4 +1,5 @@
 import "./styles.css";
+import flagIcon from "../images/flag_1549459.png";
 class Task {
   constructor(
     id = crypto.randomUUID(),
@@ -62,7 +63,7 @@ class Task {
 }
 
 //get all elements IIFE
-const DOM = (() =>{
+const DOM = (() => {
   const sidebar = document.querySelector(".sidebar");
   const plus = document.querySelector("#plus");
   const add_task = document.querySelector("#add_task");
@@ -71,12 +72,26 @@ const DOM = (() =>{
   const cancel = document.querySelector("#cancel");
   const title = document.querySelector("#title");
   const submit = document.querySelector("#submit");
+  const customSelect = document.querySelector(".custom-select");
+  const selected = document.querySelector(".selected");
+  const options = document.querySelector(".options");
+  const hiddenInput = document.querySelector("#priority");
   return {
-    sidebar, plus, form, add_task, add_task_cont, cancel, title, submit
+    sidebar,
+    plus,
+    form,
+    add_task,
+    add_task_cont,
+    cancel,
+    title,
+    submit,
+    customSelect,
+    selected,
+    options,
+    hiddenInput,
   };
 })();
-
-function displayForm(){
+function displayForm() {
   DOM.plus.addEventListener("mouseover", () => {
     DOM.add_task.style.color = "var(--redColor)";
   });
@@ -102,13 +117,51 @@ function displayForm(){
       DOM.submit.style.cursor = "not-allowed";
     }
   });
+  showPriority();
+}
+
+
+function showPriority() {
+  DOM.selected.addEventListener("click", () => {
+    DOM.options.classList.toggle("hidden");
+  });
+  DOM.options.querySelectorAll(".option").forEach((option) => {
+    option.addEventListener("click", () => {
+      const clearBtn = document.createElement("span");
+      clearBtn.textContent = " ×";
+      clearBtn.style.cursor = "pointer";
+      clearBtn.style.marginLeft = "8px";
+      clearBtn.style.color = "gray";
+
+      const span = document.createElement("span");
+      span.innerHTML = "x";
+      DOM.selected.innerHTML = `${option.innerHTML}`;
+      DOM.selected.appendChild(clearBtn);
+      DOM.options.classList.toggle("hidden");
+      DOM.hiddenInput.value = option.dataset.value;
+
+      clearBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        DOM.selected.innerHTML = "";
+
+        // Create icon
+        const img = document.createElement("img");
+        img.src = flagIcon;
+        img.style.width = "15px";
+        img.style.marginRight = "5px";
+
+        // Create span text
+        const text = document.createElement("span");
+        text.textContent = "Priority";
+        text.style.display = "inline-block"; // <-- Ensures it doesn't collapse
+
+        // Append both
+        DOM.selected.appendChild(img);
+        DOM.selected.appendChild(text);
+      });
+    });
+  });
 }
 displayForm();
-
-
-
-
-
-
 
 let mainTasks = [];
