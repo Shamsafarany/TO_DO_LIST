@@ -101,12 +101,16 @@ form {
 .card:hover {
   background-color: rgb(220, 216, 216);
 }
-#date {
-  color: green;
+.date-display{
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
-
-img {
+.date-display > img{
   width: 15px;
+}
+img {
+  width: 20px;
 }
 
 #remove {
@@ -178,16 +182,82 @@ select:hover {
   background: white;
   border: 1px solid #ccc;
   border-radius: 10px;
-  top:100%;
+  top: 100%;
   margin-top: 1px;
 }
-.option{
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 10px;
-    color: black;
+.option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  color: black;
 }
-.option:hover{
-    background-color: rgb(225, 222, 222);
+.option:hover {
+  background-color: rgb(225, 222, 222);
+}
+.date-cont {
+  position: relative;  
+}
+.date-options {
+  position: absolute;
+  border: 1px solid var(--grayColor);
+  border-radius: 5px;
+  z-index: 1;
+  background-color: white;
+  width: 250px;
+  left: 100%;
+  box-shadow: 0 0 20px var(--grayColor);
+}
+.current-date {
+  padding: 10px 10px;
+  padding-bottom: 0;
+}
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+li {
+  padding: 5px 10px;
+  color: black;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+li:hover{
+  background-color: #ccc;
+}
+.display{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.day{
+  color:rgb(134, 130, 130);
+}
+.extra{
+  padding: 10px;
+}
+.extra > div{
+  border: 1px solid var(--grayColor);
+  text-align: center;
+  padding: 5px;
+  border-radius: 10px;
+}
+
+.repeat{
+  margin-top: 5px;
+}
+.time, .repeat{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  color: rgb(96, 92, 92);
+}
+.time > img, .repeat > img{
+  width: 17px;
+}
+.time:hover, .repeat:hover{
+  background-color: #ccc;
 }

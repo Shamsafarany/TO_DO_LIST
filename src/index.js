@@ -1,5 +1,6 @@
 import "./styles.css";
 import flagIcon from "../images/flag_1549459.png";
+import calendar from "../images/calendar_7173018.png";
 class Task {
   constructor(
     id = crypto.randomUUID(),
@@ -76,6 +77,11 @@ const DOM = (() => {
   const selected = document.querySelector(".selected");
   const options = document.querySelector(".options");
   const hiddenInput = document.querySelector("#priority");
+  const dateOptions = document.querySelector(".date-options");
+  const dateDisplay = document.querySelector(".date-display");
+  const dateList = document.querySelectorAll("li");
+  const hiddenDate = document.querySelector("#date-value");
+
   return {
     sidebar,
     plus,
@@ -89,6 +95,10 @@ const DOM = (() => {
     selected,
     options,
     hiddenInput,
+    dateDisplay,
+    dateOptions,
+    dateList,
+    hiddenDate,
   };
 })();
 function displayForm() {
@@ -118,8 +128,8 @@ function displayForm() {
     }
   });
   showPriority();
+  displayDate();
 }
-
 
 function showPriority() {
   DOM.selected.addEventListener("click", () => {
@@ -132,9 +142,6 @@ function showPriority() {
       clearBtn.style.cursor = "pointer";
       clearBtn.style.marginLeft = "8px";
       clearBtn.style.color = "gray";
-
-      const span = document.createElement("span");
-      span.innerHTML = "x";
       DOM.selected.innerHTML = `${option.innerHTML}`;
       DOM.selected.appendChild(clearBtn);
       DOM.options.classList.toggle("hidden");
@@ -153,7 +160,7 @@ function showPriority() {
         // Create span text
         const text = document.createElement("span");
         text.textContent = "Priority";
-        text.style.display = "inline-block"; // <-- Ensures it doesn't collapse
+        text.style.display = "inline-block";
 
         // Append both
         DOM.selected.appendChild(img);
@@ -165,3 +172,89 @@ function showPriority() {
 displayForm();
 
 let mainTasks = [];
+
+function displayDate() {
+  DOM.dateDisplay.addEventListener("click", () => {
+    DOM.dateOptions.classList.toggle("hidden");
+  });
+
+  DOM.dateList.forEach((item) => {
+    item.addEventListener("click", () => {
+      const display = item.querySelector(".display");
+      const dateCont = document.querySelector(".date-cont");
+      const choice = display.querySelector(".choices");
+      const value = choice.textContent.trim();
+      DOM.hiddenDate.value = value !== "No Date" ? value : "";
+
+      DOM.dateDisplay.innerHTML = display.innerHTML;
+      switch (value) {
+        case "Today":
+          DOM.dateDisplay.style.color = "green";
+          dateCont.style.borderColor = "green";
+          break;
+        case "Tomorrow":
+          DOM.dateDisplay.style.color = "orange";
+          dateCont.style.borderColor = "orange";
+          break;
+        case "This Weekend":
+          DOM.dateDisplay.style.color = "blue";
+          dateCont.style.borderColor = "blue";
+          break;
+        case "No Date":
+          DOM.dateDisplay.innerHTML = "";
+
+          // Create icon
+          const img = document.createElement("img");
+          img.src = calendar;
+          img.style.width = "15px";
+          img.style.marginRight = "5px";
+
+          // Create span text
+          const text = document.createElement("span");
+          text.textContent = "Date";
+          text.style.color = "gray";
+          text.style.display = "inline-block";
+
+          // Append both
+          DOM.dateDisplay.appendChild(img);
+          DOM.dateDisplay.appendChild(text);
+          dateCont.style.borderColor = "gray";
+
+          break;
+        default:
+          DOM.dateDisplay.style.color = "black";
+      }
+      if (value !== "No Date") {
+        const clearBtn = document.createElement("span");
+        clearBtn.textContent = " ×";
+        clearBtn.style.cursor = "pointer";
+        clearBtn.style.marginLeft = "8px";
+        clearBtn.style.color = "gray";
+
+        DOM.dateDisplay.appendChild(clearBtn);
+
+        clearBtn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          DOM.dateDisplay.innerHTML = "";
+          dateCont.style.borderColor = "gray";
+
+          // Create icon
+          const img = document.createElement("img");
+          img.src = calendar;
+          img.style.width = "15px";
+          img.style.marginRight = "5px";
+
+          // Create span text
+          const text = document.createElement("span");
+          text.textContent = "Date";
+          text.style.color = "gray";
+          text.style.display = "inline-block";
+
+          DOM.dateDisplay.appendChild(img);
+          DOM.dateDisplay.appendChild(text);
+        });
+      }
+      DOM.dateOptions.classList.toggle("hidden");
+    });
+  });
+}

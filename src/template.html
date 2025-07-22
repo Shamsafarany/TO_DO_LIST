@@ -26,14 +26,63 @@
             />
             <input type="text" placeholder="Description" id="description" />
             <div class="cards">
-              <div class="card" id="date">
-                <img
-                  style="color: green"
-                  src="../images/calendar_7173018.png"
-                />
-                Today
-                <span id="remove">&times;</span>
+              <div class="card date-cont">
+                <div class="date-display">
+                  <img src="../images/calendar_7173018.png" />
+                  Date
+                </div>
+                <div class="date-options hidden">
+                  <div class="current-date">22 Jul</div>
+                  <hr />
+                  <div class="list">
+                    <ul>
+                      <li>
+                        <div class="display">
+                          <img src="../images/calendar_7173018.png" />
+                          <span class="choices" id="num1">Today</span>      
+                        </div>
+                        <div class="day">Tue</div>
+                      </li>
+                      <li>
+                        <div class="display">
+                          <img src="../images/sun_3073665.png" />
+                          <span class="choices"  id="num2">Tomorrow</span>
+                        </div>
+                        <div class="day">Wed</div>
+                      </li>
+                      <li>
+                        <div class="display">
+                          <img src="../images/seater-sofa.png" />
+                          <span class="choices"  id="num3">This Weekend</span>
+                        </div>
+                        <div class="day">Fri</div>
+                      </li>
+                      <li>
+                        <div class="display">
+                          <img src="../images/no-stopping.png" />
+                         <span class="choices"  id="num4">No Date</span>
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+                  <hr />
+                  <div class="date-picker">
+                    <input type="date" id="date-picker" />
+                  </div>
+                  <hr />
+                  <div class="extra">
+                    <div class="time">
+                      <img src="../images/clock.png" />Time
+                    </div>
+                    <div class="repeat">
+                      <img src="../images/repeat.png" />Repeat
+                    </div>
+                  </div>
+                </div>
               </div>
+              <input type="hidden" id="date-value" name="date" />
+
+
               <div class="custom-select card">
                 <div class="selected">
                   <img src="../images/flag_1549459.png" alt="flag" />
@@ -58,7 +107,7 @@
               <input type="hidden" id="priority" name="priority" />
             </div>
           </div>
-          <hr/>
+          <hr />
           <div class="submit-cont">
             <div class="projects">
               <img src="../images/inbox_8299973.png" />
