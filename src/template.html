@@ -34,18 +34,31 @@
                 Today
                 <span id="remove">&times;</span>
               </div>
-              <div class="card" id="priority">
-                <select id="priority-choice" title="Choose Priority">
-                  <img src="../images/flag_1549459.png" />
-                  <option value="" disabled selected hidden>Priority</option>
-                  <option value="low">Low</option>
-                  <option value="medium">Medium</option>
-                  <option value="high">High</option>
-                </select>
+              <div class="custom-select card">
+                <div class="selected">
+                  <img src="../images/flag_1549459.png" alt="flag" />
+                  <span>Priority</span>
+                </div>
+
+                <div class="options hidden">
+                  <div data-value="low" class="option">
+                    <img src="../images/flag_1549459.png" alt="" />
+                    Low
+                  </div>
+                  <div data-value="medium" class="option">
+                    <img src="../images/flag_2838691.png" alt="" />
+                    Medium
+                  </div>
+                  <div data-value="high" class="option">
+                    <img src="../images/flag_2838834.png" alt="" />
+                    High
+                  </div>
+                </div>
               </div>
+              <input type="hidden" id="priority" name="priority" />
             </div>
           </div>
-          <hr />
+          <hr/>
           <div class="submit-cont">
             <div class="projects">
               <img src="../images/inbox_8299973.png" />
