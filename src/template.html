@@ -16,7 +16,6 @@
           <div id="plus">+</div>
           <h5 id="add_task">Add Task</h5>
         </div>
-
         <form action="" class="hidden">
           <div class="add_task_display">
             <input
@@ -36,8 +35,13 @@
                 <span id="remove">&times;</span>
               </div>
               <div class="card" id="priority">
-                <img src="../images/flag_1549459.png" />
-                Priority
+                <select id="priority-choice" title="Choose Priority">
+                  <img src="../images/flag_1549459.png" />
+                  <option value="" disabled selected hidden>Priority</option>
+                  <option value="low">Low</option>
+                  <option value="medium">Medium</option>
+                  <option value="high">High</option>
+                </select>
               </div>
             </div>
           </div>

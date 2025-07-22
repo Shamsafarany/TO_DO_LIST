@@ -68,20 +68,42 @@ const DOM = (() =>{
   const add_task = document.querySelector("#add_task");
   const form = document.querySelector("form");
   const add_task_cont = document.querySelector(".add_task_cont");
+  const cancel = document.querySelector("#cancel");
+  const title = document.querySelector("#title");
+  const submit = document.querySelector("#submit");
   return {
-    sidebar, plus, form, add_task, add_task_cont
+    sidebar, plus, form, add_task, add_task_cont, cancel, title, submit
   };
 })();
-DOM.plus.addEventListener("mouseover", () =>{
-  DOM.add_task.style.color = "var(--redColor)";
-})
-DOM.plus.addEventListener("mouseleave", ()=>{
-  DOM.add_task.style.color = "gray";
-})
-DOM.plus.addEventListener("click", () =>{
-  DOM.form.classList.remove("hidden");
-  DOM.add_task_cont.classList.add("hidden");
-})
+
+function displayForm(){
+  DOM.plus.addEventListener("mouseover", () => {
+    DOM.add_task.style.color = "var(--redColor)";
+  });
+  DOM.plus.addEventListener("mouseleave", () => {
+    DOM.add_task.style.color = "gray";
+  });
+  DOM.plus.addEventListener("click", () => {
+    DOM.form.classList.toggle("hidden");
+    DOM.add_task_cont.classList.toggle("hidden");
+  });
+  DOM.cancel.addEventListener("click", () => {
+    DOM.form.classList.toggle("hidden");
+    DOM.add_task_cont.classList.toggle("hidden");
+  });
+  DOM.title.addEventListener("input", () => {
+    if (DOM.title.value.trim() !== "") {
+      DOM.submit.disabled = false;
+      DOM.submit.style.cursor = "pointer";
+      DOM.submit.style.opacity = 1;
+    } else {
+      DOM.submit.disabled = true;
+      DOM.submit.style.opacity = "50%";
+      DOM.submit.style.cursor = "not-allowed";
+    }
+  });
+}
+displayForm();
 
 
 

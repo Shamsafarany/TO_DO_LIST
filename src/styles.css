@@ -68,12 +68,15 @@ form {
   font-weight: 560;
 }
 #title::placeholder {
-  color: rgb(157, 153, 153);
+  color: rgb(134, 130, 130);
 }
 #description {
   border: none;
   outline: none;
   letter-spacing: 0.5px;
+}
+#description::placeholder{
+    color:rgb(165, 160, 160);
 }
 .cards {
   display: flex;
@@ -120,10 +123,10 @@ img {
   border-radius: 5px;
   min-width: 90px;
 }
-#cancel{
-    text-align: center;
-    display: flex;
-    justify-content: center;
+#cancel {
+  text-align: center;
+  display: flex;
+  justify-content: center;
 }
 #cancel:hover {
   background-color: rgb(215, 211, 211);
@@ -148,9 +151,18 @@ img {
   background-color: rgb(230, 225, 225);
 }
 
-.hidden{
-    display: none;
+.hidden {
+  display: none;
 }
-.show{
-    display: block;
+.show {
+  display: block;
+}
+select {
+  
+  appearance: none;
+  border: none;
+  outline: none;
+}
+select:hover {
+  background-color: rgb(220, 216, 216);
 }
