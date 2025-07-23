@@ -18,6 +18,7 @@
         </div>
         <form action="" class="hidden">
           <div class="add_task_display">
+            <div class="dateDisplayCard"></div>
             <input
               type="text"
               placeholder="Plan team lunch Jan 10 at 12:30pm"
@@ -32,35 +33,35 @@
                   Date
                 </div>
                 <div class="date-options hidden">
-                  <div class="current-date">22 Jul</div>
+                  <div class="current-date"></div>
                   <hr />
                   <div class="list">
                     <ul>
                       <li>
                         <div class="display">
                           <img src="../images/calendar_7173018.png" />
-                          <span class="choices" id="num1">Today</span>      
+                          <span class="choices" id="num1">Today</span>
                         </div>
-                        <div class="day">Tue</div>
+                        <div class="day"></div>
                       </li>
                       <li>
                         <div class="display">
                           <img src="../images/sun_3073665.png" />
-                          <span class="choices"  id="num2">Tomorrow</span>
+                          <span class="choices" id="num2">Tomorrow</span>
                         </div>
-                        <div class="day">Wed</div>
+                        <div class="day"></div>
                       </li>
                       <li>
                         <div class="display">
                           <img src="../images/seater-sofa.png" />
-                          <span class="choices"  id="num3">This Weekend</span>
+                          <span class="choices" id="num3">This Weekend</span>
                         </div>
-                        <div class="day">Fri</div>
+                        <div class="day"></div>
                       </li>
                       <li>
                         <div class="display">
                           <img src="../images/no-stopping.png" />
-                         <span class="choices"  id="num4">No Date</span>
+                          <span class="choices" id="num4">No Date</span>
                         </div>
                       </li>
                     </ul>
@@ -72,7 +73,22 @@
                   <hr />
                   <div class="extra">
                     <div class="time">
-                      <img src="../images/clock.png" />Time
+                      <img src="../images/clock.png" /><span id="showTime"
+                        >Time</span
+                      >
+                      <div class="timeDisplay hidden">
+                        <div class="timeForm">
+                          <label for="times">Time:</label>
+                          <input type="text" id="times" />
+                        </div>
+                        <hr />
+                        <div class="buttonsTimeDisplay">
+                          <button class="buttonsTime" id="cancelBtn">Cancel</button>
+                          <button type="submit" class="buttonsTime" id="save">
+                            Save
+                          </button>
+                        </div>
+                      </div>
                     </div>
                     <div class="repeat">
                       <img src="../images/repeat.png" />Repeat
@@ -81,7 +97,6 @@
                 </div>
               </div>
               <input type="hidden" id="date-value" name="date" />
-
 
               <div class="custom-select card">
                 <div class="selected">

@@ -241,12 +241,12 @@ li:hover{
 .extra > div{
   border: 1px solid var(--grayColor);
   text-align: center;
-  padding: 5px;
+  padding: 7px;
   border-radius: 10px;
 }
 
 .repeat{
-  margin-top: 5px;
+  margin-top: 10px;
 }
 .time, .repeat{
   display: flex;
@@ -260,4 +260,67 @@ li:hover{
 }
 .time:hover, .repeat:hover{
   background-color: #ccc;
+}
+
+.dateCard{
+  background-color:rgb(80, 178, 214);
+}
+.dateDisplayCard{
+  margin-top: 5px;
+  display: inline;
+}
+.dateCard{
+  padding: 4px 10px;
+  border-radius: 5px;
+}
+
+.time{
+  position: relative;
+}
+.timeDisplay{
+  position: absolute;
+  border: 1px solid var(--grayColor);
+  bottom: 100%;
+  width: 120%;
+  z-index: 1;
+  background-color: white;
+  border-radius: 5px;
+  box-shadow: 0 0 20px;
+}
+
+.buttonsTimeDisplay{
+  display: flex;
+  justify-content: end;
+  gap: 10px;
+  padding: 10px;
+}
+.buttonsTime{
+  padding: 6px;
+  border: none;
+  font-weight: 700;
+  border-radius: 5px;
+  min-width: 70px;
+}
+#cancelBtn {
+  text-align: center;
+  display: flex;
+  justify-content: center;
+}
+#cancelBtn:hover {
+  background-color: rgb(215, 211, 211);
+}
+#save {
+  background-color: var(--redColor);
+  color: white;
+  cursor: pointer;
+  text-align: center;
+}
+.timeForm{
+  padding: 10px;
+  margin-top: 10px;
+}
+.timeForm > label{
+  color: black;
+  font-weight: 600;
+  margin-right: 10px;
 }

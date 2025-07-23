@@ -81,6 +81,8 @@ const DOM = (() => {
   const dateDisplay = document.querySelector(".date-display");
   const dateList = document.querySelectorAll("li");
   const hiddenDate = document.querySelector("#date-value");
+  const dateDisplayCard = document.querySelector(".dateDisplayCard");
+  const chosenDate = document.querySelector(".current-date");
 
   return {
     sidebar,
@@ -99,6 +101,8 @@ const DOM = (() => {
     dateOptions,
     dateList,
     hiddenDate,
+    dateDisplayCard,
+    chosenDate,
   };
 })();
 function displayForm() {
@@ -143,6 +147,8 @@ function showPriority() {
       clearBtn.style.marginLeft = "8px";
       clearBtn.style.color = "gray";
       DOM.selected.innerHTML = `${option.innerHTML}`;
+      DOM.customSelect.style.borderColor = "red";
+      DOM.selected.style.color = "red";
       DOM.selected.appendChild(clearBtn);
       DOM.options.classList.toggle("hidden");
       DOM.hiddenInput.value = option.dataset.value;
@@ -165,6 +171,8 @@ function showPriority() {
         // Append both
         DOM.selected.appendChild(img);
         DOM.selected.appendChild(text);
+        DOM.customSelect.style.borderColor = "rgb(189, 184, 184)";
+        DOM.selected.style.color = "gray";
       });
     });
   });
@@ -174,19 +182,58 @@ displayForm();
 let mainTasks = [];
 
 function displayDate() {
+  const date = new Date();
+  const day = date.getDate();
+  const month = date.toLocaleString("default", { month: "short" });
+
+  DOM.chosenDate.innerHTML = `${day} ${month}`;
   DOM.dateDisplay.addEventListener("click", () => {
     DOM.dateOptions.classList.toggle("hidden");
   });
-
   DOM.dateList.forEach((item) => {
+    const display = item.querySelector(".display");
+    const dayDisplay = item.querySelector(".day");
+    const choice = display.querySelector(".choices");
+    const value = choice.textContent.trim();
+    let dayName;
+    switch (value) {
+      case "Today":
+        dayName = date.toLocaleDateString("en-US", { weekday: "short" });
+        dayDisplay.innerHTML = `${dayName}`;
+        break;
+      case "Tomorrow":
+        date.setDate(date.getDate() + 1);
+        dayName = date.toLocaleDateString("en-US", { weekday: "short" });
+        dayDisplay.innerHTML = `${dayName}`;
+        break;
+      case "This Weekend":
+        const currentday = date.getDay();
+        const diff = (6 - currentday + 7) % 7; // Get days until Saturday
+        date.setDate(date.getDate() + diff);
+        dayName = date.toLocaleDateString("en-US", { weekday: "short" });
+        dayDisplay.innerHTML = `${dayName}`;
+        break;
+    }
+
     item.addEventListener("click", () => {
-      const display = item.querySelector(".display");
       const dateCont = document.querySelector(".date-cont");
-      const choice = display.querySelector(".choices");
-      const value = choice.textContent.trim();
+
       DOM.hiddenDate.value = value !== "No Date" ? value : "";
 
       DOM.dateDisplay.innerHTML = display.innerHTML;
+      DOM.chosenDate.innerHTML = "";
+
+      const card = showFormattedDate(value);
+      const oldCard = document.querySelector(".dateCard");
+
+      if (oldCard) oldCard.remove();
+      if (card) {
+        const clone = card.cloneNode(true);
+        DOM.dateDisplayCard.appendChild(card);
+        DOM.chosenDate.appendChild(clone);
+        clone.style.color = "black";
+      }
+
       switch (value) {
         case "Today":
           DOM.dateDisplay.style.color = "green";
@@ -202,6 +249,7 @@ function displayDate() {
           break;
         case "No Date":
           DOM.dateDisplay.innerHTML = "";
+          DOM.chosenDate.innerHTML = "";
 
           // Create icon
           const img = document.createElement("img");
@@ -219,11 +267,11 @@ function displayDate() {
           DOM.dateDisplay.appendChild(img);
           DOM.dateDisplay.appendChild(text);
           dateCont.style.borderColor = "gray";
-
           break;
         default:
           DOM.dateDisplay.style.color = "black";
       }
+
       if (value !== "No Date") {
         const clearBtn = document.createElement("span");
         clearBtn.textContent = " ×";
@@ -236,7 +284,11 @@ function displayDate() {
         clearBtn.addEventListener("click", (e) => {
           e.stopPropagation();
           DOM.dateDisplay.innerHTML = "";
-          dateCont.style.borderColor = "gray";
+          const date = new Date();
+          const day = date.getDate();
+          const month = date.toLocaleString("default", { month: "short" });
+          DOM.chosenDate.innerHTML = `${day} ${month}`;
+          dateCont.style.borderColor = "rgb(189, 184, 184)";
 
           // Create icon
           const img = document.createElement("img");
@@ -252,9 +304,49 @@ function displayDate() {
 
           DOM.dateDisplay.appendChild(img);
           DOM.dateDisplay.appendChild(text);
+          card.remove();
         });
+      } else {
+        DOM.chosenDate.innerHTML = `${day} ${month}`;
       }
       DOM.dateOptions.classList.toggle("hidden");
     });
   });
+}
+
+function showFormattedDate(value) {
+  const dateCard = document.createElement("span");
+  dateCard.classList.add("dateCard");
+  let date;
+  switch (value) {
+    case "Today":
+      date = new Date();
+      dateCard.style.backgroundColor = "aquamarine";
+      break;
+    case "Tomorrow":
+      date = new Date();
+      date.setDate(date.getDate() + 1);
+      dateCard.style.backgroundColor = "orange";
+      break;
+    case "This Weekend":
+      date = new Date();
+      const day = date.getDay();
+      const diff = (6 - day + 7) % 7; // Get days until Saturday
+      date.setDate(date.getDate() + diff);
+      dateCard.style.backgroundColor = "rgba(93, 190, 225, 1)";
+      break;
+    case "No Date":
+      return null;
+    default:
+      return null;
+  }
+
+  const day = date.getDate();
+  const month = date.toLocaleString("default", { month: "short" });
+  dateCard.textContent = `${day} ${month}`;
+  return dateCard;
+}
+
+function addTime(){
+  
 }
