@@ -1,6 +1,8 @@
 import "./styles.css";
 import flagIcon from "../images/flag_1549459.png";
 import calendar from "../images/calendar_7173018.png";
+import "js-datepicker/dist/datepicker.min.css";
+const datepicker = require("js-datepicker");
 class Task {
   constructor(
     id = crypto.randomUUID(),
@@ -83,6 +85,12 @@ const DOM = (() => {
   const hiddenDate = document.querySelector("#date-value");
   const dateDisplayCard = document.querySelector(".dateDisplayCard");
   const chosenDate = document.querySelector(".current-date");
+  const timeDisplay = document.querySelector(".timeDisplay");
+  const cancelBtn = document.querySelector("#cancelBtn");
+  const saveBtn = document.querySelector("#save");
+  const timeInput = document.querySelector(".times");
+  const timeBtn = document.querySelector(".timeBTN");
+  const showTimeTitle = document.querySelector("#showTime");
 
   return {
     sidebar,
@@ -103,6 +111,12 @@ const DOM = (() => {
     hiddenDate,
     dateDisplayCard,
     chosenDate,
+    timeBtn,
+    timeDisplay,
+    cancelBtn,
+    saveBtn,
+    timeInput,
+    showTimeTitle,
   };
 })();
 function displayForm() {
@@ -133,6 +147,7 @@ function displayForm() {
   });
   showPriority();
   displayDate();
+  addTime();
 }
 
 function showPriority() {
@@ -312,6 +327,7 @@ function displayDate() {
       DOM.dateOptions.classList.toggle("hidden");
     });
   });
+  createDatePicker(datepicker);
 }
 
 function showFormattedDate(value) {
@@ -347,6 +363,91 @@ function showFormattedDate(value) {
   return dateCard;
 }
 
-function addTime(){
-  
+function addTime() {
+  let timeChosen;
+
+  // Toggle time picker
+  DOM.timeBtn.addEventListener("click", () => {
+    DOM.timeDisplay.classList.toggle("hidden");
+  });
+
+  // Cancel hides the time picker
+  DOM.cancelBtn.addEventListener("click", () => {
+    DOM.timeDisplay.classList.add("hidden");
+  });
+
+  // Save sets time, adds card, hides picker
+  DOM.saveBtn.addEventListener("click", () => {
+    timeChosen = document.querySelector("#times").value;
+    const card = showTime(timeChosen);
+    DOM.showTimeTitle.innerHTML = `${timeChosen}`;
+    DOM.showTimeTitle.style.color = "black";
+
+    // Remove previous cards from both containers
+    DOM.dateDisplayCard
+      .querySelectorAll(".timeCard")
+      .forEach((card) => card.remove());
+    DOM.chosenDate
+      .querySelectorAll(".timeCard")
+      .forEach((card) => card.remove());
+
+    if (card) {
+      const clone = card.cloneNode(true);
+      DOM.dateDisplayCard.appendChild(card);
+      DOM.chosenDate.appendChild(clone);
+    }
+
+    DOM.timeDisplay.classList.add("hidden");
+  });
+}
+function showTime(time) {
+  const timeCard = document.createElement("span");
+  timeCard.classList.add("timeCard");
+  timeCard.textContent = `${time}`;
+
+  if (!DOM.timeBtn.querySelector(".clearTimeBtn")) {
+    const clearBtn = document.createElement("span");
+    clearBtn.classList.add("clearTimeBtn");
+    clearBtn.textContent = " ×";
+    clearBtn.style.fontSize = "18px";
+    clearBtn.style.cursor = "pointer";
+    clearBtn.style.marginLeft = "20px";
+    clearBtn.style.color = "gray";
+
+    clearBtn.addEventListener("click", () => {
+      // Remove time cards from both containers
+      DOM.dateDisplayCard.querySelector(".timeCard").remove();
+      DOM.chosenDate.querySelector(".timeCard").remove();
+      DOM.showTimeTitle.innerHTML = `Time`;
+      DOM.showTimeTitle.style.color = "gray";
+
+      // Remove the clear button itself
+      clearBtn.remove();
+    });
+
+    DOM.timeBtn.appendChild(clearBtn);
+  }
+
+  return timeCard;
+}
+
+function createDatePicker(datepicker) {
+  const display = document.querySelector("#date-picker");
+  const today = new Date();
+  const picker = datepicker(display, {
+    inline: true,
+    minDate: today,
+    defaultDate: today,
+    highlightedDates: [today],
+    formatter: (input, date, instance) => {
+      const day = String(date.getDate()).padStart(2, "0");
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const year = date.getFullYear();
+      input.value = `${day}/${month}/${year}`;
+    },
+  });
+
+  display.addEventListener("keydown", (e) => {
+    e.preventDefault();
+  });
 }

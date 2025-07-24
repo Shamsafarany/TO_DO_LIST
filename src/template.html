@@ -67,31 +67,31 @@
                     </ul>
                   </div>
                   <hr />
-                  <div class="date-picker">
-                    <input type="date" id="date-picker" />
+                  <div class="date-pickerCont">
+                    
                   </div>
                   <hr />
                   <div class="extra">
                     <div class="time">
-                      <img src="../images/clock.png" /><span id="showTime"
-                        >Time</span
-                      >
+                      <div class="timeBTN">
+                         <img src="../images/clock.png" /><span id="showTime">Time</span>
+                      </div>
+                     
                       <div class="timeDisplay hidden">
                         <div class="timeForm">
                           <label for="times">Time:</label>
-                          <input type="text" id="times" />
+                          <input type="time" id="times" value="13:00"/>
                         </div>
                         <hr />
                         <div class="buttonsTimeDisplay">
-                          <button class="buttonsTime" id="cancelBtn">Cancel</button>
-                          <button type="submit" class="buttonsTime" id="save">
+                          <button class="buttonsTime" id="cancelBtn" type="button">
+                            Cancel
+                          </button>
+                          <button type="button" class="buttonsTime" id="save">
                             Save
                           </button>
                         </div>
                       </div>
-                    </div>
-                    <div class="repeat">
-                      <img src="../images/repeat.png" />Repeat
                     </div>
                   </div>
                 </div>
