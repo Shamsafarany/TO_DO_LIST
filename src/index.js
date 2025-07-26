@@ -2,68 +2,9 @@ import "./styles.css";
 import flagIcon from "../images/flag_1549459.png";
 import calendar from "../images/calendar_7173018.png";
 import "js-datepicker/dist/datepicker.min.css";
+import Task from "./task.js";
+import DOMUI from "./ui.js";
 const datepicker = require("js-datepicker");
-class Task {
-  constructor(
-    id = crypto.randomUUID(),
-    title = "",
-    description = "",
-    dueDate = null,
-    priority = "low",
-    status = "not complete"
-  ) {
-    this._id = id;
-    this._title = title;
-    this._description = description;
-    this._dueDate = dueDate;
-    this._priority = priority;
-    this._status = status;
-  }
-  get title() {
-    return this._title;
-  }
-  set title(title) {
-    if (title.length > 0) {
-      this._title = title;
-    } else {
-      console.log("Enter task title");
-    }
-  }
-
-  get description() {
-    return this._description;
-  }
-  set description(description) {
-    this._description = description;
-  }
-
-  get dueDate() {
-    return this._dueDate;
-  }
-  set dueDate(dueDate) {
-    this._dueDate = dueDate;
-  }
-
-  get priority() {
-    return this._priority;
-  }
-  set priority(priority) {
-    this._priority = priority;
-  }
-  get status() {
-    return this._status;
-  }
-  set status(status) {
-    if (status === "complete" || status === "not complete") {
-      this._status = status;
-    } else {
-      console.log("Invalid input");
-    }
-  }
-  toggleStatus() {
-    this._status = this._status === "complete" ? "not complete" : "complete";
-  }
-}
 
 //get all elements IIFE
 const DOM = (() => {
@@ -192,7 +133,6 @@ function showPriority() {
     });
   });
 }
-displayForm();
 
 function displayDate() {
   const date = new Date();
@@ -301,13 +241,11 @@ function displayDate() {
           img.style.width = "15px";
           img.style.marginRight = "5px";
 
-
           const text = document.createElement("span");
           text.textContent = "Date";
           text.style.color = "gray";
           text.style.display = "inline-block";
 
-    
           DOM.dateDisplay.appendChild(img);
           DOM.dateDisplay.appendChild(text);
           dateCont.style.borderColor = "gray";
@@ -502,7 +440,6 @@ function addTime() {
         DOM.chosenDate.querySelector(".dateCard")?.remove();
         DOM.dateDisplayCard.querySelector(".timeCard")?.remove();
         DOM.chosenDate.querySelector(".timeCard")?.remove();
-        
 
         const hasDate = DOM.chosenDate.querySelector(".dateCard");
         const hasTime = DOM.chosenDate.querySelector(".timeCard");
@@ -604,6 +541,7 @@ function createDatePicker(datepicker) {
       month = String(date.getMonth() + 1).padStart(2, "0");
       const year = date.getFullYear();
       input.value = `${day}/${month}/${year}`;
+      DOM.hiddenDate.value = value !== "No Date" ? value : "";
 
       const dateCard = document.createElement("span");
       dateCard.classList.add("dateCard");
@@ -695,4 +633,111 @@ function createDatePicker(datepicker) {
       });
     },
   });
+}
+displayForm();
+
+let taskList = [];
+function formSubmit() {
+  DOMUI.form.addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    const title = DOMUI.titleInput.value;
+    const description = DOMUI.descriptionInput.value;
+    const date = DOMUI.dueDateInput.value;
+    const time = DOMUI.time.value;
+    const priority = DOMUI.priorityInput.value;
+
+    const newTask = new Task(title, description, date, time, priority);
+    taskList.push(newTask);
+
+    let html = "";
+    for (let i = 0; i < taskList.length; i++) {
+      html += `
+    <li class="task-item">
+    <div class="tasktitle"">
+      <div class="task-index">${i + 1}. </div>
+      <div class="task-title">${taskList[i].title}</div>
+    </div>
+      <div class="task-description">${taskList[i].description}</div>
+      <div class="task-datetime">
+        <div class="task-date">
+        <img src="../im">
+        ${taskList[i].date}</div>
+        <div class="task-time">${taskList[i].time}</div>
+      </div>
+        <div class="task-meta">Priority: ${taskList[i].priority}</div>
+    </li>
+    <hr/>
+  `;
+    }
+    DOMUI.taskList.innerHTML = html;
+    formReset();
+    DOM.form.classList.toggle("hidden");
+    DOM.add_task_cont.classList.toggle("hidden");
+  });
+}
+formSubmit();
+
+function formReset() {
+  DOM.form.reset();
+
+  // Reset priority
+  DOM.hiddenInput.value = "";
+  DOM.selected.innerHTML = "";
+
+  const img = document.createElement("img");
+  img.src = flagIcon;
+  img.style.width = "15px";
+  img.style.marginRight = "5px";
+
+  const text = document.createElement("span");
+  text.textContent = "Priority";
+  text.style.color = "gray";
+  text.style.display = "inline-block";
+
+  DOM.selected.appendChild(img);
+  DOM.selected.appendChild(text);
+  DOM.customSelect.style.borderColor = "rgb(189, 184, 184)";
+  DOM.selected.style.color = "gray";
+
+  //Reset day
+  DOM.dateDisplay.innerHTML = "";
+  const date = new Date();
+  const day = date.getDate();
+  const month = date.toLocaleString("default", { month: "short" });
+  const dateCont = document.querySelector(".date-cont");
+  DOM.dateDisplayCard.querySelector(".dateCard")?.remove();
+  DOM.chosenDate.querySelector(".dateCard")?.remove();
+  DOM.dateDisplayCard.querySelector(".timeCard")?.remove();
+  DOM.chosenDate.querySelector(".timeCard")?.remove();
+
+  const hasDate = DOM.chosenDate.querySelector(".dateCard");
+  const hasTime = DOM.chosenDate.querySelector(".timeCard");
+
+  if (!hasDate && !hasTime) {
+    const placeholder = document.createElement("span");
+    placeholder.classList.add("placeholderCard");
+    placeholder.textContent = `${day} ${month}`;
+    placeholder.style.color = "gray";
+    placeholder.style.backgroundColor = "#eee";
+    DOM.chosenDate.appendChild(placeholder);
+  }
+
+  const img2 = document.createElement("img");
+  img2.src = calendar;
+  img2.style.width = "15px";
+  img2.style.marginRight = "5px";
+
+  const text2 = document.createElement("span");
+  text2.textContent = "Date";
+  text2.style.color = "gray";
+  text2.style.display = "inline-block";
+
+  DOM.dateDisplay.appendChild(img2);
+  DOM.dateDisplay.appendChild(text2);
+  dateCont.style.borderColor = "rgb(189, 184, 184)";
+  DOM.showTimeTitle.innerHTML = "";
+  DOM.showTimeTitle.innerHTML = `Time`;
+  DOM.showTimeTitle.style.color = "gray";
+  DOM.timeBtn.querySelector(".clearTimeBtn")?.remove();
 }

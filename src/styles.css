@@ -362,3 +362,34 @@ li:hover {
   border-radius: 5px;
   margin: 2px;
 }
+
+.task-item{
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+.task-title{
+  font-size: 20px;
+}
+.task-index{
+  font-size: 20px;
+}
+.task-description, .task-datetime, .task-priority{
+  color: gray;
+  font-size: 15px;
+  padding-left: 25px;
+}
+.tasktitle{
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+.task-datetime{
+  display: flex;
+  gap: 10px;
+  padding-left: 25px;
+}
+.task-date > img{
+  
+}
