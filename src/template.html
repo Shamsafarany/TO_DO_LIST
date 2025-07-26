@@ -18,6 +18,7 @@
         </div>
         <form action="" class="hidden">
           <div class="add_task_display">
+            <div class="dateDisplayCard"></div>
             <input
               type="text"
               placeholder="Plan team lunch Jan 10 at 12:30pm"
@@ -26,14 +27,78 @@
             />
             <input type="text" placeholder="Description" id="description" />
             <div class="cards">
-              <div class="card" id="date">
-                <img
-                  style="color: green"
-                  src="../images/calendar_7173018.png"
-                />
-                Today
-                <span id="remove">&times;</span>
+              <div class="card date-cont">
+                <div class="date-display">
+                  <img src="../images/calendar_7173018.png" />
+                  Date
+                </div>
+                <div class="date-options hidden">
+                  <div class="current-date"></div>
+                  <hr />
+                  <div class="list">
+                    <ul>
+                      <li>
+                        <div class="display">
+                          <img src="../images/calendar_7173018.png" />
+                          <span class="choices" id="num1">Today</span>
+                        </div>
+                        <div class="day"></div>
+                      </li>
+                      <li>
+                        <div class="display">
+                          <img src="../images/sun_3073665.png" />
+                          <span class="choices" id="num2">Tomorrow</span>
+                        </div>
+                        <div class="day"></div>
+                      </li>
+                      <li>
+                        <div class="display">
+                          <img src="../images/seater-sofa.png" />
+                          <span class="choices" id="num3">This Weekend</span>
+                        </div>
+                        <div class="day"></div>
+                      </li>
+                      <li>
+                        <div class="display">
+                          <img src="../images/no-stopping.png" />
+                          <span class="choices" id="num4">No Date</span>
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+                  <hr />
+                  <div class="date-pickerCont">
+                    <input type="text" id="date-picker" placeholder="Choose date"/>
+                    <img src="../images/calendar_7173018.png">
+                  </div>
+                  <hr />
+                  <div class="extra">
+                    <div class="time">
+                      <div class="timeBTN">
+                         <img src="../images/clock.png" /><span id="showTime">Time</span>
+                      </div>
+                     
+                      <div class="timeDisplay hidden">
+                        <div class="timeForm">
+                          <label for="times">Time:</label>
+                          <input type="time" id="times" value="13:00"/>
+                        </div>
+                        <hr />
+                        <div class="buttonsTimeDisplay">
+                          <button class="buttonsTime" id="cancelBtn" type="button">
+                            Cancel
+                          </button>
+                          <button type="button" class="buttonsTime" id="save">
+                            Save
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
+              <input type="hidden" id="date-value" name="date" />
+
               <div class="custom-select card">
                 <div class="selected">
                   <img src="../images/flag_1549459.png" alt="flag" />
@@ -58,7 +123,7 @@
               <input type="hidden" id="priority" name="priority" />
             </div>
           </div>
-          <hr/>
+          <hr />
           <div class="submit-cont">
             <div class="projects">
               <img src="../images/inbox_8299973.png" />

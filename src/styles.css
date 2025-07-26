@@ -101,12 +101,16 @@ form {
 .card:hover {
   background-color: rgb(220, 216, 216);
 }
-#date {
-  color: green;
+.date-display {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
-
-img {
+.date-display > img {
   width: 15px;
+}
+img {
+  width: 20px;
 }
 
 #remove {
@@ -178,16 +182,183 @@ select:hover {
   background: white;
   border: 1px solid #ccc;
   border-radius: 10px;
-  top:100%;
+  top: 100%;
   margin-top: 1px;
 }
-.option{
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 10px;
-    color: black;
+.option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  color: black;
 }
-.option:hover{
-    background-color: rgb(225, 222, 222);
+.option:hover {
+  background-color: rgb(225, 222, 222);
+}
+.date-cont {
+  position: relative;
+}
+.date-options {
+  position: absolute;
+  border: 1px solid var(--grayColor);
+  border-radius: 5px;
+  z-index: 1;
+  background-color: white;
+  width: 250px;
+  left: 100%;
+  box-shadow: 0 0 20px var(--grayColor);
+}
+.current-date {
+  padding: 10px 10px;
+  padding-bottom: 0;
+}
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+li {
+  padding: 5px 10px;
+  color: black;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+li:hover {
+  background-color: #ccc;
+}
+.display {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.day {
+  color: rgb(134, 130, 130);
+}
+.extra {
+  padding: 10px;
+}
+.extra > div {
+  border: 1px solid var(--grayColor);
+  text-align: center;
+  padding: 7px;
+  border-radius: 10px;
+}
+
+.repeat {
+  margin-top: 10px;
+}
+.timeBTN,
+.repeat {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  color: rgb(96, 92, 92);
+}
+.timeBTN > img,
+.repeat > img {
+  width: 17px;
+}
+.time:hover,
+.repeat:hover {
+  background-color: #ccc;
+}
+
+.dateCard {
+  background-color: rgb(80, 178, 214);
+}
+.dateDisplayCard {
+  margin-top: 5px;
+  display: inline;
+}
+.dateCard {
+  padding: 4px 10px;
+  border-radius: 5px;
+  margin: 2px;
+}
+
+.time {
+  position: relative;
+}
+.timeDisplay {
+  position: absolute;
+  border: 1px solid var(--grayColor);
+  bottom: 100%;
+  width: 110%;
+  z-index: 1;
+  background-color: white;
+  border-radius: 5px;
+  box-shadow: 0 0 20px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.buttonsTimeDisplay {
+  display: flex;
+  justify-content: end;
+  gap: 10px;
+  padding: 10px;
+}
+.buttonsTime {
+  padding: 6px;
+  border: none;
+  font-weight: 700;
+  border-radius: 5px;
+  min-width: 70px;
+}
+#cancelBtn {
+  text-align: center;
+  display: flex;
+  justify-content: center;
+}
+#cancelBtn:hover {
+  background-color: rgb(215, 211, 211);
+}
+#save {
+  background-color: var(--redColor);
+  color: white;
+  cursor: pointer;
+  text-align: center;
+}
+.timeForm {
+  padding: 10px;
+  margin-top: 10px;
+}
+.timeForm > label {
+  color: black;
+  font-weight: 600;
+  margin-right: 10px;
+}
+.timeCard {
+  background-color: rgb(139, 78, 196);
+  color: white;
+  padding: 4px 10px;
+  border-radius: 5px;
+  margin: 2px;
+}
+.date-pickerCont {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  position: relative;
+}
+.date-pickerCont > img{
+  position: absolute;
+  left: 70%;
+  margin-bottom: 2px;
+}
+#date-picker {
+  width: 55%;
+  border: none;
+  outline: none;
+  border-bottom: 1px solid gray;
+  font-size: 17px;
+  color: var(--redColor);
+}
+.placeholderCard{
+  padding: 4px 10px;
+  border-radius: 5px;
+  margin: 2px;
 }
