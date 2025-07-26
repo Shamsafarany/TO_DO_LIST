@@ -337,9 +337,28 @@ li:hover {
   border-radius: 5px;
   margin: 2px;
 }
-#date-picker{
-  width: 80%;
-  padding: 5px;
-  margin: 10px;
-  margin-left: 15px;
+.date-pickerCont {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  position: relative;
+}
+.date-pickerCont > img{
+  position: absolute;
+  left: 70%;
+  margin-bottom: 2px;
+}
+#date-picker {
+  width: 55%;
+  border: none;
+  outline: none;
+  border-bottom: 1px solid gray;
+  font-size: 17px;
+  color: var(--redColor);
+}
+.placeholderCard{
+  padding: 4px 10px;
+  border-radius: 5px;
+  margin: 2px;
 }

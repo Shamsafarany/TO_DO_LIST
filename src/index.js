@@ -194,14 +194,17 @@ function showPriority() {
 }
 displayForm();
 
-let mainTasks = [];
-
 function displayDate() {
   const date = new Date();
   const day = date.getDate();
   const month = date.toLocaleString("default", { month: "short" });
 
-  DOM.chosenDate.innerHTML = `${day} ${month}`;
+  const placeholder = document.createElement("span");
+  placeholder.classList.add("placeholderCard");
+  placeholder.textContent = `${day} ${month}`;
+  placeholder.style.color = "gray";
+  placeholder.style.backgroundColor = "#eee";
+  DOM.chosenDate.appendChild(placeholder);
   DOM.dateDisplay.addEventListener("click", () => {
     DOM.dateOptions.classList.toggle("hidden");
   });
@@ -236,7 +239,15 @@ function displayDate() {
       DOM.hiddenDate.value = value !== "No Date" ? value : "";
 
       DOM.dateDisplay.innerHTML = display.innerHTML;
-      DOM.chosenDate.innerHTML = "";
+      const hasDate = DOM.chosenDate.querySelector(".dateCard");
+      const hasTime = DOM.chosenDate.querySelector(".timeCard");
+
+      if (!hasDate && !hasTime) {
+        const placeholder = document.querySelector(".placeholderCard");
+        placeholder.remove();
+      } else if (hasDate) {
+        DOM.chosenDate.querySelector(".dateCard")?.remove();
+      }
 
       const card = showFormattedDate(value);
       const oldCard = document.querySelector(".dateCard");
@@ -264,24 +275,46 @@ function displayDate() {
           break;
         case "No Date":
           DOM.dateDisplay.innerHTML = "";
-          DOM.chosenDate.innerHTML = "";
+          const date = new Date();
+          const day = date.getDate();
+          const month = date.toLocaleString("default", { month: "short" });
 
-          // Create icon
+          DOM.dateDisplayCard.querySelector(".dateCard")?.remove();
+          DOM.chosenDate.querySelector(".dateCard")?.remove();
+          DOM.dateDisplayCard.querySelector(".timeCard")?.remove();
+          DOM.chosenDate.querySelector(".timeCard")?.remove();
+
+          const hasDate = DOM.chosenDate.querySelector(".dateCard");
+          const hasTime = DOM.chosenDate.querySelector(".timeCard");
+
+          if (!hasDate && !hasTime) {
+            const placeholder = document.createElement("span");
+            placeholder.classList.add("placeholderCard");
+            placeholder.textContent = `${day} ${month}`;
+            placeholder.style.color = "gray";
+            placeholder.style.backgroundColor = "#eee";
+            DOM.chosenDate.appendChild(placeholder);
+          }
+
           const img = document.createElement("img");
           img.src = calendar;
           img.style.width = "15px";
           img.style.marginRight = "5px";
 
-          // Create span text
+
           const text = document.createElement("span");
           text.textContent = "Date";
           text.style.color = "gray";
           text.style.display = "inline-block";
 
-          // Append both
+    
           DOM.dateDisplay.appendChild(img);
           DOM.dateDisplay.appendChild(text);
           dateCont.style.borderColor = "gray";
+          DOM.showTimeTitle.innerHTML = "";
+          DOM.showTimeTitle.innerHTML = `Time`;
+          DOM.showTimeTitle.style.color = "gray";
+          DOM.timeBtn.querySelector(".clearTimeBtn").remove();
           break;
         default:
           DOM.dateDisplay.style.color = "black";
@@ -302,7 +335,21 @@ function displayDate() {
           const date = new Date();
           const day = date.getDate();
           const month = date.toLocaleString("default", { month: "short" });
-          DOM.chosenDate.innerHTML = `${day} ${month}`;
+
+          DOM.dateDisplayCard.querySelector(".dateCard")?.remove();
+          DOM.chosenDate.querySelector(".dateCard")?.remove();
+
+          const hasDate = DOM.chosenDate.querySelector(".dateCard");
+          const hasTime = DOM.chosenDate.querySelector(".timeCard");
+
+          if (!hasDate && !hasTime) {
+            const placeholder = document.createElement("span");
+            placeholder.classList.add("placeholderCard");
+            placeholder.textContent = `${day} ${month}`;
+            placeholder.style.color = "gray";
+            placeholder.style.backgroundColor = "#eee";
+            DOM.chosenDate.appendChild(placeholder);
+          }
           dateCont.style.borderColor = "rgb(189, 184, 184)";
 
           // Create icon
@@ -322,11 +369,18 @@ function displayDate() {
           card.remove();
         });
       } else {
-        DOM.chosenDate.innerHTML = `${day} ${month}`;
+        DOM.chosenDate.innerHTML = "";
+        const placeholder = document.createElement("span");
+        placeholder.classList.add("placeholderCard");
+        placeholder.textContent = `${day} ${month}`;
+        placeholder.style.color = "gray";
+        placeholder.style.backgroundColor = "#eee";
+        DOM.chosenDate.appendChild(placeholder);
       }
       DOM.dateOptions.classList.toggle("hidden");
     });
   });
+
   createDatePicker(datepicker);
 }
 
@@ -365,6 +419,8 @@ function showFormattedDate(value) {
 
 function addTime() {
   let timeChosen;
+  const date = new Date();
+  const day = date.getDate();
 
   // Toggle time picker
   DOM.timeBtn.addEventListener("click", () => {
@@ -379,6 +435,7 @@ function addTime() {
   // Save sets time, adds card, hides picker
   DOM.saveBtn.addEventListener("click", () => {
     timeChosen = document.querySelector("#times").value;
+
     const card = showTime(timeChosen);
     DOM.showTimeTitle.innerHTML = `${timeChosen}`;
     DOM.showTimeTitle.style.color = "black";
@@ -391,6 +448,94 @@ function addTime() {
       .querySelectorAll(".timeCard")
       .forEach((card) => card.remove());
 
+    const hasDate = DOM.chosenDate.querySelector(".dateCard");
+    const hasTime = DOM.chosenDate.querySelector(".timeCard");
+
+    if (!hasDate && !hasTime) {
+      const placeholder = document.querySelector(".placeholderCard");
+      placeholder.remove();
+    }
+    if (!hasDate) {
+      const dateCard = document.createElement("span");
+      dateCard.classList.add("dateCard");
+      dateCard.textContent = `${day} ${date.toLocaleString("default", {
+        month: "short",
+      })}`;
+      dateCard.style.backgroundColor = "aquamarine";
+      dateCard.style.color = "black";
+      DOM.dateDisplayCard.appendChild(dateCard.cloneNode(true));
+      DOM.chosenDate.appendChild(dateCard);
+      DOM.dateDisplay.innerHTML = "";
+      const img = document.createElement("img");
+      img.src = calendar;
+      img.style.width = "15px";
+      img.style.marginRight = "5px";
+
+      const dayName = date.toLocaleDateString("en-US", { weekday: "long" });
+
+      const text = document.createElement("span");
+      text.textContent = `Today`;
+      text.style.display = "inline-block";
+      DOM.dateDisplay.style.color = "green";
+      const dateCont = document.querySelector(".date-cont");
+      dateCont.style.borderColor = "green";
+
+      DOM.dateDisplay.appendChild(img);
+      DOM.dateDisplay.appendChild(text);
+
+      const clearBtn = document.createElement("span");
+      clearBtn.textContent = " ×";
+      clearBtn.style.cursor = "pointer";
+      clearBtn.style.marginLeft = "8px";
+      clearBtn.style.color = "gray";
+
+      DOM.dateDisplay.appendChild(clearBtn);
+
+      clearBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        DOM.dateDisplay.innerHTML = "";
+        const date = new Date();
+        const day = date.getDate();
+        const month = date.toLocaleString("default", { month: "short" });
+
+        DOM.dateDisplayCard.querySelector(".dateCard")?.remove();
+        DOM.chosenDate.querySelector(".dateCard")?.remove();
+        DOM.dateDisplayCard.querySelector(".timeCard")?.remove();
+        DOM.chosenDate.querySelector(".timeCard")?.remove();
+        
+
+        const hasDate = DOM.chosenDate.querySelector(".dateCard");
+        const hasTime = DOM.chosenDate.querySelector(".timeCard");
+
+        if (!hasDate && !hasTime) {
+          const placeholder = document.createElement("span");
+          placeholder.classList.add("placeholderCard");
+          placeholder.textContent = `${day} ${month}`;
+          placeholder.style.color = "gray";
+          placeholder.style.backgroundColor = "#eee";
+          DOM.chosenDate.appendChild(placeholder);
+        }
+
+        dateCont.style.borderColor = "rgb(189, 184, 184)";
+
+        // Create icon
+        const img = document.createElement("img");
+        img.src = calendar;
+        img.style.width = "15px";
+        img.style.marginRight = "5px";
+
+        // Create span text
+        const text = document.createElement("span");
+        text.textContent = "Date";
+        text.style.color = "gray";
+        text.style.display = "inline-block";
+        DOM.dateDisplay.appendChild(img);
+        DOM.dateDisplay.appendChild(text);
+        document.querySelectorAll(".dateCard").forEach((card) => {
+          card.remove();
+        });
+      });
+    }
     if (card) {
       const clone = card.cloneNode(true);
       DOM.dateDisplayCard.appendChild(card);
@@ -415,13 +560,26 @@ function showTime(time) {
     clearBtn.style.color = "gray";
 
     clearBtn.addEventListener("click", () => {
+      const now = new Date();
+      const day = now.getDate();
+      const month = now.toLocaleString("default", { month: "short" });
       // Remove time cards from both containers
-      DOM.dateDisplayCard.querySelector(".timeCard").remove();
-      DOM.chosenDate.querySelector(".timeCard").remove();
+      DOM.dateDisplayCard.querySelector(".timeCard")?.remove();
+      DOM.chosenDate.querySelector(".timeCard")?.remove();
+
+      const hasDate = DOM.chosenDate.querySelector(".dateCard");
+      const hasTime = DOM.chosenDate.querySelector(".timeCard");
+
+      if (!hasDate && !hasTime) {
+        const placeholder = document.createElement("span");
+        placeholder.classList.add("placeholderCard");
+        placeholder.textContent = `${day} ${month}`;
+        placeholder.style.color = "gray";
+        placeholder.style.backgroundColor = "#eee";
+        DOM.chosenDate.appendChild(placeholder);
+      }
       DOM.showTimeTitle.innerHTML = `Time`;
       DOM.showTimeTitle.style.color = "gray";
-
-      // Remove the clear button itself
       clearBtn.remove();
     });
 
@@ -434,20 +592,107 @@ function showTime(time) {
 function createDatePicker(datepicker) {
   const display = document.querySelector("#date-picker");
   const today = new Date();
+  let day;
+  let month;
   const picker = datepicker(display, {
     inline: true,
     minDate: today,
     defaultDate: today,
     highlightedDates: [today],
     formatter: (input, date, instance) => {
-      const day = String(date.getDate()).padStart(2, "0");
-      const month = String(date.getMonth() + 1).padStart(2, "0");
+      day = String(date.getDate()).padStart(2, "0");
+      month = String(date.getMonth() + 1).padStart(2, "0");
       const year = date.getFullYear();
       input.value = `${day}/${month}/${year}`;
-    },
-  });
 
-  display.addEventListener("keydown", (e) => {
-    e.preventDefault();
+      const dateCard = document.createElement("span");
+      dateCard.classList.add("dateCard");
+      dateCard.textContent = `${day} ${date.toLocaleString("default", {
+        month: "short",
+      })}`;
+      dateCard.style.backgroundColor = "rgb(185, 54, 54)";
+      dateCard.style.color = "white";
+
+      const hasDate = DOM.chosenDate.querySelector(".dateCard");
+      const hasTime = DOM.chosenDate.querySelector(".timeCard");
+
+      if (!hasDate && !hasTime) {
+        const placeholder = document.querySelector(".placeholderCard");
+        placeholder.remove();
+      } else if (hasDate) {
+        DOM.chosenDate.querySelector(".dateCard")?.remove();
+        DOM.dateDisplayCard.querySelector(".dateCard")?.remove();
+      }
+      DOM.dateDisplayCard.appendChild(dateCard.cloneNode(true));
+      DOM.chosenDate.appendChild(dateCard);
+
+      DOM.dateDisplay.innerHTML = "";
+      const img = document.createElement("img");
+      img.src = calendar;
+      img.style.width = "15px";
+      img.style.marginRight = "5px";
+
+      const dayName = date.toLocaleDateString("en-US", { weekday: "long" });
+
+      const text = document.createElement("span");
+      text.textContent = dayName;
+      text.style.display = "inline-block";
+      DOM.dateDisplay.style.color = "rgb(185, 54, 54)";
+      const dateCont = document.querySelector(".date-cont");
+      dateCont.style.borderColor = "rgb(185, 54, 54)";
+
+      DOM.dateDisplay.appendChild(img);
+      DOM.dateDisplay.appendChild(text);
+
+      const clearBtn = document.createElement("span");
+      clearBtn.textContent = " ×";
+      clearBtn.style.cursor = "pointer";
+      clearBtn.style.marginLeft = "8px";
+      clearBtn.style.color = "gray";
+
+      DOM.dateDisplay.appendChild(clearBtn);
+
+      clearBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        DOM.dateDisplay.innerHTML = "";
+        const date = new Date();
+        const day = date.getDate();
+        const month = date.toLocaleString("default", { month: "short" });
+
+        DOM.dateDisplayCard.querySelector(".dateCard")?.remove();
+        DOM.chosenDate.querySelector(".dateCard")?.remove();
+
+        const hasDate = DOM.chosenDate.querySelector(".dateCard");
+        const hasTime = DOM.chosenDate.querySelector(".timeCard");
+
+        if (!hasDate && !hasTime) {
+          const placeholder = document.createElement("span");
+          placeholder.classList.add("placeholderCard");
+          placeholder.textContent = `${day} ${month}`;
+          placeholder.style.color = "gray";
+          placeholder.style.backgroundColor = "#eee";
+          DOM.chosenDate.appendChild(placeholder);
+        }
+
+        dateCont.style.borderColor = "rgb(189, 184, 184)";
+
+        // Create icon
+        const img = document.createElement("img");
+        img.src = calendar;
+        img.style.width = "15px";
+        img.style.marginRight = "5px";
+
+        // Create span text
+        const text = document.createElement("span");
+        text.textContent = "Date";
+        text.style.color = "gray";
+        text.style.display = "inline-block";
+        DOM.dateDisplay.appendChild(img);
+        DOM.dateDisplay.appendChild(text);
+        document.querySelectorAll(".dateCard").forEach((card) => {
+          card.remove();
+        });
+      });
+    },
   });
 }
