@@ -2,14 +2,14 @@ export default class Task {
   constructor(
     title = "",
     description = "",
-    dueDate = null,
-    time = null,
-    priority = "low",
+    date = "",
+    time = "",
+    priority = "low"
   ) {
     this._id = crypto.randomUUID();
     this._title = title;
     this._description = description;
-    this._dueDate = dueDate;
+    this._date = date;
     this.time = time;
     this._priority = priority;
     this._status = "not complete";
@@ -32,11 +32,11 @@ export default class Task {
     this._description = description;
   }
 
-  get dueDate() {
-    return this._dueDate;
+  get date() {
+    return this._date;
   }
-  set dueDate(dueDate) {
-    this._dueDate = dueDate;
+  set date(date) {
+    this.date = date;
   }
   get time() {
     return this._time;

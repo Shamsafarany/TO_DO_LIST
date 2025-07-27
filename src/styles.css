@@ -5,6 +5,7 @@ body {
   font-family: sans-serif;
   display: flex;
   box-sizing: border-box;
+  font-family: Arial, Helvetica, sans-serif;
 }
 :root {
   --redColor: rgb(185, 54, 54);
@@ -74,6 +75,7 @@ form {
   border: none;
   outline: none;
   letter-spacing: 0.5px;
+  color: rgb(165, 160, 160);
 }
 #description::placeholder {
   color: rgb(165, 160, 160);
@@ -365,20 +367,31 @@ li:hover {
 
 .task-item{
   display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+.listDisplayContainer{
+  display: flex;
   flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
+  gap: 5px;
 }
 .task-title{
   font-size: 20px;
 }
-.task-index{
-  font-size: 20px;
+.task-checkbox{
+  cursor: pointer;
+  width: 20px;
+
 }
-.task-description, .task-datetime, .task-priority{
+.task-description{
   color: gray;
   font-size: 15px;
-  padding-left: 25px;
+  padding-left: 35px;
+}
+.task-datetime, .task-priority{
+  color: rgb(156, 93, 93);
+  font-size: 15px;
+  padding-left: 35px;
 }
 .tasktitle{
   display: flex;
@@ -388,8 +401,15 @@ li:hover {
 .task-datetime{
   display: flex;
   gap: 10px;
-  padding-left: 25px;
+  padding-left: 35px;
+  align-items: center;
 }
-.task-date > img{
-  
+
+.task-title.completed{
+  text-decoration: line-through;
+  color: gray;
+}
+.editsContainer{
+  display: flex;
+  gap: 10px;
 }

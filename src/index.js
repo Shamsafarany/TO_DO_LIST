@@ -1,6 +1,9 @@
 import "./styles.css";
 import flagIcon from "../images/flag_1549459.png";
 import calendar from "../images/calendar_7173018.png";
+import clock from "../images/clock.png";
+import trash from "../images/trash_12616431.png";
+import pen from "../images/pen_5948978.png";
 import "js-datepicker/dist/datepicker.min.css";
 import Task from "./task.js";
 import DOMUI from "./ui.js";
@@ -29,7 +32,7 @@ const DOM = (() => {
   const timeDisplay = document.querySelector(".timeDisplay");
   const cancelBtn = document.querySelector("#cancelBtn");
   const saveBtn = document.querySelector("#save");
-  const timeInput = document.querySelector(".times");
+  const timeInput = document.querySelector("#times");
   const timeBtn = document.querySelector(".timeBTN");
   const showTimeTitle = document.querySelector("#showTime");
 
@@ -70,8 +73,12 @@ function displayForm() {
   DOM.plus.addEventListener("click", () => {
     DOM.form.classList.toggle("hidden");
     DOM.add_task_cont.classList.toggle("hidden");
+    if (!DOM.form.classList.contains("hidden")) {
+      showCurrentDate();
+    }
   });
-  DOM.cancel.addEventListener("click", () => {
+  DOM.cancel.addEventListener("click", (e) => {
+    e.preventDefault();
     DOM.form.classList.toggle("hidden");
     DOM.add_task_cont.classList.toggle("hidden");
   });
@@ -86,12 +93,36 @@ function displayForm() {
       DOM.submit.style.cursor = "not-allowed";
     }
   });
+ 
   showPriority();
   displayDate();
   addTime();
 }
-
+let reset = false;
+function showCurrentDate() {
+  if (reset === false) {
+    const date = new Date();
+    const day = date.getDate();
+    const month = date.toLocaleString("default", { month: "short" });
+    console.log("called");
+    const placeHolder = DOM.chosenDate.querySelector(".placeholderCard");
+    if (placeHolder === null) {
+      console.log("not found");
+      const placeholder = document.createElement("span");
+      placeholder.classList.add("placeholderCard");
+      placeholder.textContent = `${day} ${month}`;
+      placeholder.style.color = "gray";
+      placeholder.style.backgroundColor = "#eee";
+      DOM.chosenDate.appendChild(placeholder);
+      console.log("added");
+    } 
+  } else {
+    console.log("found");
+  }
+  
+}
 function showPriority() {
+  
   DOM.selected.addEventListener("click", () => {
     DOM.options.classList.toggle("hidden");
   });
@@ -112,6 +143,7 @@ function showPriority() {
       clearBtn.addEventListener("click", (e) => {
         e.stopPropagation();
         DOM.selected.innerHTML = "";
+        DOM.hiddenInput.value = ""; 
 
         // Create icon
         const img = document.createElement("img");
@@ -138,16 +170,10 @@ function displayDate() {
   const date = new Date();
   const day = date.getDate();
   const month = date.toLocaleString("default", { month: "short" });
-
-  const placeholder = document.createElement("span");
-  placeholder.classList.add("placeholderCard");
-  placeholder.textContent = `${day} ${month}`;
-  placeholder.style.color = "gray";
-  placeholder.style.backgroundColor = "#eee";
-  DOM.chosenDate.appendChild(placeholder);
   DOM.dateDisplay.addEventListener("click", () => {
-    DOM.dateOptions.classList.toggle("hidden");
+    DOM.dateOptions.classList.toggle("hidden"); 
   });
+  
   DOM.dateList.forEach((item) => {
     const display = item.querySelector(".display");
     const dayDisplay = item.querySelector(".day");
@@ -166,7 +192,7 @@ function displayDate() {
         break;
       case "This Weekend":
         const currentday = date.getDay();
-        const diff = (6 - currentday + 7) % 7; // Get days until Saturday
+        const diff = (6 - currentday + 7) % 7;
         date.setDate(date.getDate() + diff);
         dayName = date.toLocaleDateString("en-US", { weekday: "short" });
         dayDisplay.innerHTML = `${dayName}`;
@@ -175,16 +201,12 @@ function displayDate() {
 
     item.addEventListener("click", () => {
       const dateCont = document.querySelector(".date-cont");
-
-      DOM.hiddenDate.value = value !== "No Date" ? value : "";
-
       DOM.dateDisplay.innerHTML = display.innerHTML;
       const hasDate = DOM.chosenDate.querySelector(".dateCard");
       const hasTime = DOM.chosenDate.querySelector(".timeCard");
 
       if (!hasDate && !hasTime) {
-        const placeholder = document.querySelector(".placeholderCard");
-        placeholder.remove();
+        DOM.chosenDate.querySelector(".placeholderCard")?.remove();
       } else if (hasDate) {
         DOM.chosenDate.querySelector(".dateCard")?.remove();
       }
@@ -213,47 +235,6 @@ function displayDate() {
           DOM.dateDisplay.style.color = "blue";
           dateCont.style.borderColor = "blue";
           break;
-        case "No Date":
-          DOM.dateDisplay.innerHTML = "";
-          const date = new Date();
-          const day = date.getDate();
-          const month = date.toLocaleString("default", { month: "short" });
-
-          DOM.dateDisplayCard.querySelector(".dateCard")?.remove();
-          DOM.chosenDate.querySelector(".dateCard")?.remove();
-          DOM.dateDisplayCard.querySelector(".timeCard")?.remove();
-          DOM.chosenDate.querySelector(".timeCard")?.remove();
-
-          const hasDate = DOM.chosenDate.querySelector(".dateCard");
-          const hasTime = DOM.chosenDate.querySelector(".timeCard");
-
-          if (!hasDate && !hasTime) {
-            const placeholder = document.createElement("span");
-            placeholder.classList.add("placeholderCard");
-            placeholder.textContent = `${day} ${month}`;
-            placeholder.style.color = "gray";
-            placeholder.style.backgroundColor = "#eee";
-            DOM.chosenDate.appendChild(placeholder);
-          }
-
-          const img = document.createElement("img");
-          img.src = calendar;
-          img.style.width = "15px";
-          img.style.marginRight = "5px";
-
-          const text = document.createElement("span");
-          text.textContent = "Date";
-          text.style.color = "gray";
-          text.style.display = "inline-block";
-
-          DOM.dateDisplay.appendChild(img);
-          DOM.dateDisplay.appendChild(text);
-          dateCont.style.borderColor = "gray";
-          DOM.showTimeTitle.innerHTML = "";
-          DOM.showTimeTitle.innerHTML = `Time`;
-          DOM.showTimeTitle.style.color = "gray";
-          DOM.timeBtn.querySelector(".clearTimeBtn").remove();
-          break;
         default:
           DOM.dateDisplay.style.color = "black";
       }
@@ -270,6 +251,7 @@ function displayDate() {
         clearBtn.addEventListener("click", (e) => {
           e.stopPropagation();
           DOM.dateDisplay.innerHTML = "";
+          DOM.hiddenDate.value = "";
           const date = new Date();
           const day = date.getDate();
           const month = date.toLocaleString("default", { month: "short" });
@@ -306,14 +288,6 @@ function displayDate() {
           DOM.dateDisplay.appendChild(text);
           card.remove();
         });
-      } else {
-        DOM.chosenDate.innerHTML = "";
-        const placeholder = document.createElement("span");
-        placeholder.classList.add("placeholderCard");
-        placeholder.textContent = `${day} ${month}`;
-        placeholder.style.color = "gray";
-        placeholder.style.backgroundColor = "#eee";
-        DOM.chosenDate.appendChild(placeholder);
       }
       DOM.dateOptions.classList.toggle("hidden");
     });
@@ -352,6 +326,7 @@ function showFormattedDate(value) {
   const day = date.getDate();
   const month = date.toLocaleString("default", { month: "short" });
   dateCard.textContent = `${day} ${month}`;
+  DOM.hiddenDate.value = dateCard.textContent;
   return dateCard;
 }
 
@@ -370,123 +345,123 @@ function addTime() {
     DOM.timeDisplay.classList.add("hidden");
   });
 
-  // Save sets time, adds card, hides picker
   DOM.saveBtn.addEventListener("click", () => {
-    timeChosen = document.querySelector("#times").value;
+     if (document.querySelector("#times").value !== "") {
+       timeChosen = document.querySelector("#times").value;
+       const card = showTime(timeChosen);
+       DOM.showTimeTitle.innerHTML = `${timeChosen}`;
+       DOM.showTimeTitle.style.color = "black";
 
-    const card = showTime(timeChosen);
-    DOM.showTimeTitle.innerHTML = `${timeChosen}`;
-    DOM.showTimeTitle.style.color = "black";
+       // Remove previous cards from both containers
+       DOM.dateDisplayCard
+         .querySelectorAll(".timeCard")
+         .forEach((card) => card.remove());
+       DOM.chosenDate
+         .querySelectorAll(".timeCard")
+         .forEach((card) => card.remove());
 
-    // Remove previous cards from both containers
-    DOM.dateDisplayCard
-      .querySelectorAll(".timeCard")
-      .forEach((card) => card.remove());
-    DOM.chosenDate
-      .querySelectorAll(".timeCard")
-      .forEach((card) => card.remove());
+       const hasDate = DOM.chosenDate.querySelector(".dateCard");
+       const hasTime = DOM.chosenDate.querySelector(".timeCard");
 
-    const hasDate = DOM.chosenDate.querySelector(".dateCard");
-    const hasTime = DOM.chosenDate.querySelector(".timeCard");
+       if (!hasDate && !hasTime) {
+         const placeholder = document.querySelector(".placeholderCard");
+         placeholder.remove();
+       }
+       if (!hasDate) {
+         const dateCard = document.createElement("span");
+         dateCard.classList.add("dateCard");
+         dateCard.textContent = `${day} ${date.toLocaleString("default", {
+           month: "short",
+         })}`;
+         dateCard.style.backgroundColor = "aquamarine";
+         dateCard.style.color = "black";
+         DOM.dateDisplayCard.appendChild(dateCard.cloneNode(true));
+         DOM.chosenDate.appendChild(dateCard);
+         DOM.hiddenDate.value = dateCard.textContent;
+         DOM.dateDisplay.innerHTML = "";
+         const img = document.createElement("img");
+         img.src = calendar;
+         img.style.width = "15px";
+         img.style.marginRight = "5px";        
+         const text = document.createElement("span");
+         text.textContent = `Today`;
+         text.style.display = "inline-block";
+         DOM.dateDisplay.style.color = "green";
+         const dateCont = document.querySelector(".date-cont");
+         dateCont.style.borderColor = "green";
 
-    if (!hasDate && !hasTime) {
-      const placeholder = document.querySelector(".placeholderCard");
-      placeholder.remove();
-    }
-    if (!hasDate) {
-      const dateCard = document.createElement("span");
-      dateCard.classList.add("dateCard");
-      dateCard.textContent = `${day} ${date.toLocaleString("default", {
-        month: "short",
-      })}`;
-      dateCard.style.backgroundColor = "aquamarine";
-      dateCard.style.color = "black";
-      DOM.dateDisplayCard.appendChild(dateCard.cloneNode(true));
-      DOM.chosenDate.appendChild(dateCard);
-      DOM.dateDisplay.innerHTML = "";
-      const img = document.createElement("img");
-      img.src = calendar;
-      img.style.width = "15px";
-      img.style.marginRight = "5px";
+         DOM.dateDisplay.appendChild(img);
+         DOM.dateDisplay.appendChild(text);
 
-      const dayName = date.toLocaleDateString("en-US", { weekday: "long" });
+         const clearBtn = document.createElement("span");
+         clearBtn.textContent = " ×";
+         clearBtn.style.cursor = "pointer";
+         clearBtn.style.marginLeft = "8px";
+         clearBtn.style.color = "gray";
 
-      const text = document.createElement("span");
-      text.textContent = `Today`;
-      text.style.display = "inline-block";
-      DOM.dateDisplay.style.color = "green";
-      const dateCont = document.querySelector(".date-cont");
-      dateCont.style.borderColor = "green";
+         DOM.dateDisplay.appendChild(clearBtn);
 
-      DOM.dateDisplay.appendChild(img);
-      DOM.dateDisplay.appendChild(text);
+         clearBtn.addEventListener("click", (e) => {
+           e.stopPropagation();
+           DOM.dateDisplay.innerHTML = "";
+           const date = new Date();
+           const day = date.getDate();
+           const month = date.toLocaleString("default", { month: "short" });
 
-      const clearBtn = document.createElement("span");
-      clearBtn.textContent = " ×";
-      clearBtn.style.cursor = "pointer";
-      clearBtn.style.marginLeft = "8px";
-      clearBtn.style.color = "gray";
+           DOM.dateDisplayCard.querySelector(".dateCard")?.remove();
+           DOM.chosenDate.querySelector(".dateCard")?.remove();
+           DOM.dateDisplayCard.querySelector(".timeCard")?.remove();
+           DOM.chosenDate.querySelector(".timeCard")?.remove();
+           DOM.hiddenDate.value = "";
 
-      DOM.dateDisplay.appendChild(clearBtn);
+           const hasDate = DOM.chosenDate.querySelector(".dateCard");
+           const hasTime = DOM.chosenDate.querySelector(".timeCard");
 
-      clearBtn.addEventListener("click", (e) => {
-        e.stopPropagation();
-        DOM.dateDisplay.innerHTML = "";
-        const date = new Date();
-        const day = date.getDate();
-        const month = date.toLocaleString("default", { month: "short" });
+           if (!hasDate && !hasTime) {
+             const placeholder = document.createElement("span");
+             placeholder.classList.add("placeholderCard");
+             placeholder.textContent = `${day} ${month}`;
+             placeholder.style.color = "gray";
+             placeholder.style.backgroundColor = "#eee";
+             DOM.chosenDate.appendChild(placeholder);
+           }
 
-        DOM.dateDisplayCard.querySelector(".dateCard")?.remove();
-        DOM.chosenDate.querySelector(".dateCard")?.remove();
-        DOM.dateDisplayCard.querySelector(".timeCard")?.remove();
-        DOM.chosenDate.querySelector(".timeCard")?.remove();
+           dateCont.style.borderColor = "rgb(189, 184, 184)";
 
-        const hasDate = DOM.chosenDate.querySelector(".dateCard");
-        const hasTime = DOM.chosenDate.querySelector(".timeCard");
+           // Create icon
+           const img = document.createElement("img");
+           img.src = calendar;
+           img.style.width = "15px";
+           img.style.marginRight = "5px";
 
-        if (!hasDate && !hasTime) {
-          const placeholder = document.createElement("span");
-          placeholder.classList.add("placeholderCard");
-          placeholder.textContent = `${day} ${month}`;
-          placeholder.style.color = "gray";
-          placeholder.style.backgroundColor = "#eee";
-          DOM.chosenDate.appendChild(placeholder);
-        }
+           // Create span text
+           const text = document.createElement("span");
+           text.textContent = "Date";
+           text.style.color = "gray";
+           text.style.display = "inline-block";
+           DOM.dateDisplay.appendChild(img);
+           DOM.dateDisplay.appendChild(text);
+           document.querySelectorAll(".dateCard").forEach((card) => {
+             card.remove();
+           });
+         });
+       }
+       if (card) {
+         const clone = card.cloneNode(true);
+         DOM.dateDisplayCard.appendChild(card);
+         DOM.chosenDate.appendChild(clone);
+       }
 
-        dateCont.style.borderColor = "rgb(189, 184, 184)";
-
-        // Create icon
-        const img = document.createElement("img");
-        img.src = calendar;
-        img.style.width = "15px";
-        img.style.marginRight = "5px";
-
-        // Create span text
-        const text = document.createElement("span");
-        text.textContent = "Date";
-        text.style.color = "gray";
-        text.style.display = "inline-block";
-        DOM.dateDisplay.appendChild(img);
-        DOM.dateDisplay.appendChild(text);
-        document.querySelectorAll(".dateCard").forEach((card) => {
-          card.remove();
-        });
-      });
-    }
-    if (card) {
-      const clone = card.cloneNode(true);
-      DOM.dateDisplayCard.appendChild(card);
-      DOM.chosenDate.appendChild(clone);
-    }
-
-    DOM.timeDisplay.classList.add("hidden");
+       DOM.timeDisplay.classList.add("hidden");
+     } else {
+       console.log("Choose time");
+     }
   });
 }
 function showTime(time) {
   const timeCard = document.createElement("span");
   timeCard.classList.add("timeCard");
   timeCard.textContent = `${time}`;
-
   if (!DOM.timeBtn.querySelector(".clearTimeBtn")) {
     const clearBtn = document.createElement("span");
     clearBtn.classList.add("clearTimeBtn");
@@ -500,7 +475,9 @@ function showTime(time) {
       const now = new Date();
       const day = now.getDate();
       const month = now.toLocaleString("default", { month: "short" });
-      // Remove time cards from both containers
+       DOM.timeInput.value = "";
+       console.log(DOM.timeInput.value);
+      
       DOM.dateDisplayCard.querySelector(".timeCard")?.remove();
       DOM.chosenDate.querySelector(".timeCard")?.remove();
 
@@ -517,9 +494,10 @@ function showTime(time) {
       }
       DOM.showTimeTitle.innerHTML = `Time`;
       DOM.showTimeTitle.style.color = "gray";
+      
       clearBtn.remove();
     });
-
+     
     DOM.timeBtn.appendChild(clearBtn);
   }
 
@@ -541,8 +519,6 @@ function createDatePicker(datepicker) {
       month = String(date.getMonth() + 1).padStart(2, "0");
       const year = date.getFullYear();
       input.value = `${day}/${month}/${year}`;
-      DOM.hiddenDate.value = value !== "No Date" ? value : "";
-
       const dateCard = document.createElement("span");
       dateCard.classList.add("dateCard");
       dateCard.textContent = `${day} ${date.toLocaleString("default", {
@@ -550,13 +526,13 @@ function createDatePicker(datepicker) {
       })}`;
       dateCard.style.backgroundColor = "rgb(185, 54, 54)";
       dateCard.style.color = "white";
-
+      DOM.hiddenDate.value = dateCard.textContent;
       const hasDate = DOM.chosenDate.querySelector(".dateCard");
       const hasTime = DOM.chosenDate.querySelector(".timeCard");
 
       if (!hasDate && !hasTime) {
         const placeholder = document.querySelector(".placeholderCard");
-        placeholder.remove();
+        placeholder?.remove();
       } else if (hasDate) {
         DOM.chosenDate.querySelector(".dateCard")?.remove();
         DOM.dateDisplayCard.querySelector(".dateCard")?.remove();
@@ -593,6 +569,7 @@ function createDatePicker(datepicker) {
       clearBtn.addEventListener("click", (e) => {
         e.stopPropagation();
         DOM.dateDisplay.innerHTML = "";
+         DOM.hiddenDate.value = "";
         const date = new Date();
         const day = date.getDate();
         const month = date.toLocaleString("default", { month: "short" });
@@ -643,40 +620,19 @@ function formSubmit() {
 
     const title = DOMUI.titleInput.value;
     const description = DOMUI.descriptionInput.value;
-    const date = DOMUI.dueDateInput.value;
-    const time = DOMUI.time.value;
-    const priority = DOMUI.priorityInput.value;
+    const date = DOMUI.dueDateInput.value || "No date";
+    const time = DOMUI.time.value || "No time";
+    const priority = DOMUI.priorityInput.value || "low";
 
     const newTask = new Task(title, description, date, time, priority);
     taskList.push(newTask);
-
-    let html = "";
-    for (let i = 0; i < taskList.length; i++) {
-      html += `
-    <li class="task-item">
-    <div class="tasktitle"">
-      <div class="task-index">${i + 1}. </div>
-      <div class="task-title">${taskList[i].title}</div>
-    </div>
-      <div class="task-description">${taskList[i].description}</div>
-      <div class="task-datetime">
-        <div class="task-date">
-        <img src="../im">
-        ${taskList[i].date}</div>
-        <div class="task-time">${taskList[i].time}</div>
-      </div>
-        <div class="task-meta">Priority: ${taskList[i].priority}</div>
-    </li>
-    <hr/>
-  `;
-    }
-    DOMUI.taskList.innerHTML = html;
+    console.log(priority);
+    renderList(taskList);
     formReset();
     DOM.form.classList.toggle("hidden");
     DOM.add_task_cont.classList.toggle("hidden");
   });
 }
-formSubmit();
 
 function formReset() {
   DOM.form.reset();
@@ -699,9 +655,8 @@ function formReset() {
   DOM.selected.appendChild(text);
   DOM.customSelect.style.borderColor = "rgb(189, 184, 184)";
   DOM.selected.style.color = "gray";
-
-  //Reset day
   DOM.dateDisplay.innerHTML = "";
+  DOM.hiddenDate.value="";
   const date = new Date();
   const day = date.getDate();
   const month = date.toLocaleString("default", { month: "short" });
@@ -715,13 +670,18 @@ function formReset() {
   const hasTime = DOM.chosenDate.querySelector(".timeCard");
 
   if (!hasDate && !hasTime) {
-    const placeholder = document.createElement("span");
-    placeholder.classList.add("placeholderCard");
-    placeholder.textContent = `${day} ${month}`;
-    placeholder.style.color = "gray";
-    placeholder.style.backgroundColor = "#eee";
-    DOM.chosenDate.appendChild(placeholder);
+    const placeHolder = DOM.chosenDate.querySelector(".placeholderCard");
+    if (!placeHolder){
+      const placeholder = document.createElement("span");
+      placeholder.classList.add("placeholderCard");
+      placeholder.textContent = `${day} ${month}`;
+      placeholder.style.color = "gray";
+      placeholder.style.backgroundColor = "#eee";
+      DOM.chosenDate.appendChild(placeholder);
+    }    
+     reset = true;
   }
+  
 
   const img2 = document.createElement("img");
   img2.src = calendar;
@@ -741,3 +701,122 @@ function formReset() {
   DOM.showTimeTitle.style.color = "gray";
   DOM.timeBtn.querySelector(".clearTimeBtn")?.remove();
 }
+
+function renderList(taskList) {
+  DOMUI.taskList.innerHTML = "";
+  for (let i = 0; i < taskList.length; i++) {
+    const task = taskList[i];
+    const hr = document.createElement("hr");
+    if (i !== 0) {
+      DOMUI.taskList.appendChild(hr);
+    }
+    const li = document.createElement("li");
+    li.classList.add("task-item");
+   
+    const taskTitleDiv = document.createElement("div");
+    taskTitleDiv.classList.add("tasktitle");
+
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.classList.add("task-checkbox");
+    checkbox.addEventListener("change", () => {
+      if (checkbox.checked) {
+        task.status = "completed";
+        titleDiv.classList.add("completed");
+      } else {
+        task.status = "not completed";
+        titleDiv.classList.remove("completed");
+      }
+    });
+
+    const titleDiv = document.createElement("div");
+    titleDiv.classList.add("task-title");
+    titleDiv.textContent = task.title;
+
+    // Append index and title to taskTitleDiv
+    taskTitleDiv.appendChild(checkbox);
+    taskTitleDiv.appendChild(titleDiv);
+
+    // Description div
+    const descDiv = document.createElement("div");
+    descDiv.classList.add("task-description");
+    descDiv.textContent = task.description;
+
+    // Date and time container
+    const dateTimeDiv = document.createElement("div");
+    dateTimeDiv.classList.add("task-datetime");
+
+    // Date div with icon
+    const dateDiv = document.createElement("div");
+    dateDiv.classList.add("task-date");
+
+    const calendarImg = document.createElement("img");
+    calendarImg.src = calendar;
+    calendarImg.style.width = "13px";
+    calendarImg.style.marginRight = "6px";
+
+    dateDiv.appendChild(calendarImg);
+    dateDiv.appendChild(document.createTextNode(task.date));
+    console.log(task.date);
+
+    // Time div
+    const timeDiv = document.createElement("div");
+    const clockImg = document.createElement("img");
+    clockImg.src = clock;
+    clockImg.style.width = "13px";
+    clockImg.style.marginRight = "6px";
+    timeDiv.classList.add("task-time");
+    timeDiv.appendChild(clockImg);
+    timeDiv.appendChild(document.createTextNode(task.time));
+
+    // Append date and time to dateTimeDiv
+    dateTimeDiv.appendChild(dateDiv);
+    dateTimeDiv.appendChild(timeDiv);
+
+    // Priority div
+    const priorityDiv = document.createElement("div");
+    priorityDiv.classList.add("task-priority");
+    priorityDiv.textContent = task.priority;
+    console.log(task.priority);
+
+    //delete div
+    const deletes = document.createElement("div");
+    deletes.classList.add("editsContainer");
+    const trashImg = document.createElement("img");
+    trashImg.src = trash;
+    trashImg.style.width = "17px";
+    trashImg.style.marginRight = "6px";
+    deletes.appendChild(trashImg);
+
+    const editImg = document.createElement("img");
+    editImg.src = pen;
+    editImg.style.width = "17px";
+    editImg.style.marginRight = "6px";
+    deletes.appendChild(editImg);
+    
+    
+     const displayCont = document.createElement("div");
+     displayCont.classList.add("listDisplayContainer");
+     const editCont = document.createElement("div");
+      displayCont.appendChild(taskTitleDiv);
+      displayCont.appendChild(descDiv);
+      displayCont.appendChild(dateTimeDiv);
+      displayCont.appendChild(priorityDiv);
+      editCont.appendChild(deletes);
+    
+    
+    li.appendChild(displayCont);
+    li.appendChild(editCont);
+    
+
+    DOMUI.taskList.appendChild(li);
+
+    trashImg.addEventListener("click", () => {
+      taskList.splice(i, 1);
+      renderList(taskList);
+    })
+
+    
+  }
+}
+formSubmit();
