@@ -5,6 +5,7 @@ body {
   font-family: sans-serif;
   display: flex;
   box-sizing: border-box;
+  font-family: Arial, Helvetica, sans-serif;
 }
 :root {
   --redColor: rgb(185, 54, 54);
@@ -74,6 +75,7 @@ form {
   border: none;
   outline: none;
   letter-spacing: 0.5px;
+  color: rgb(165, 160, 160);
 }
 #description::placeholder {
   color: rgb(165, 160, 160);
@@ -175,6 +177,9 @@ select:hover {
 }
 
 .custom-select {
+  position: relative;
+}
+.custom-projects{
   position: relative;
 }
 .options {
@@ -361,4 +366,86 @@ li:hover {
   padding: 4px 10px;
   border-radius: 5px;
   margin: 2px;
+}
+
+.task-item{
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+.listDisplayContainer{
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.task-title{
+  font-size: 20px;
+}
+.task-checkbox{
+  cursor: pointer;
+  width: 20px;
+
+}
+.task-description{
+  color: gray;
+  font-size: 15px;
+  padding-left: 35px;
+}
+.task-datetime, .task-priority{
+  color: rgb(156, 93, 93);
+  font-size: 15px;
+  padding-left: 35px;
+}
+.tasktitle{
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+.task-datetime{
+  display: flex;
+  gap: 10px;
+  padding-left: 35px;
+  align-items: center;
+}
+
+.task-project{
+  color: rgb(156, 93, 93);
+  font-size: 15px;
+  padding-left: 35px;
+}
+
+.task-title.completed{
+  text-decoration: line-through;
+  color: gray;
+}
+.editsContainer{
+  display: flex;
+  gap: 10px;
+}
+.optionsP {
+  position: absolute;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  top: 100%;
+  margin-top: 1px;
+  width: 150%;
+}
+.optionsP > .option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  color: black;
+}
+.option:hover {
+  background-color: rgb(225, 222, 222);
+}
+.selectedP{
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.selectedP > img {
+  width: 17px;
 }

@@ -9,14 +9,15 @@
     <div class="sidebar"></div>
     <div class="body-cont">
       <div class="body">
-        <h1>Today</h1>
-        <div class="task-list">tasks list goes here</div>
+        <h1>Project - Inbox</h1>
+        <p class="completeCount">0 tasks completed.</p>
+        <div class="task-list"></div>
         <hr />
         <div class="add_task_cont">
           <div id="plus">+</div>
           <h5 id="add_task">Add Task</h5>
         </div>
-        <form action="" class="hidden">
+        <form action="" class="hidden" autocomplete="off">
           <div class="add_task_display">
             <div class="dateDisplayCard"></div>
             <input
@@ -58,34 +59,39 @@
                         </div>
                         <div class="day"></div>
                       </li>
-                      <li>
-                        <div class="display">
-                          <img src="../images/no-stopping.png" />
-                          <span class="choices" id="num4">No Date</span>
-                        </div>
-                      </li>
                     </ul>
                   </div>
                   <hr />
+
                   <div class="date-pickerCont">
-                    <input type="text" id="date-picker" placeholder="Choose date"/>
-                    <img src="../images/calendar_7173018.png">
+                    <input
+                      type="text"
+                      id="date-picker"
+                      placeholder="Choose date"
+                    />
+                    <img src="../images/calendar_7173018.png" />
                   </div>
                   <hr />
                   <div class="extra">
                     <div class="time">
                       <div class="timeBTN">
-                         <img src="../images/clock.png" /><span id="showTime">Time</span>
+                        <img src="../images/clock.png" /><span id="showTime"
+                          >Time</span
+                        >
                       </div>
-                     
+
                       <div class="timeDisplay hidden">
                         <div class="timeForm">
                           <label for="times">Time:</label>
-                          <input type="time" id="times" value="13:00"/>
+                          <input type="time" id="times" />
                         </div>
                         <hr />
                         <div class="buttonsTimeDisplay">
-                          <button class="buttonsTime" id="cancelBtn" type="button">
+                          <button
+                            class="buttonsTime"
+                            id="cancelBtn"
+                            type="button"
+                          >
                             Cancel
                           </button>
                           <button type="button" class="buttonsTime" id="save">
@@ -125,10 +131,32 @@
           </div>
           <hr />
           <div class="submit-cont">
-            <div class="projects">
-              <img src="../images/inbox_8299973.png" />
-              Inbox
+            <div class="projects custom-projects">
+              <div class="selectedP">
+                <img src="../images/inbox_8299973.png" />
+                <span>Inbox </span>
+              </div>
+              <div class="optionsP hidden">
+                <div data-value="work" class="option">
+                  <img src="../images/flag_1549459.png" alt="" />
+                  Work
+                </div>
+                <div data-value="education" class="option">
+                  <img src="../images/flag_2838691.png" alt="" />
+                  Education
+                </div>
+                <div data-value="personal" class="option">
+                  <img src="../images/flag_2838691.png" alt="" />
+                  Personal
+                </div>
+                <div data-value="new" class="option">
+                  <img src="../images/flag_2838834.png" alt="" />
+                  New Project
+                </div>
+              </div>
+              
             </div>
+            <input type="hidden" id="project" name="project" />
             <div class="buttons">
               <button class="buttons" id="cancel">Cancel</button>
               <button type="submit" class="buttons" id="submit">
