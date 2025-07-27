@@ -4,7 +4,8 @@ export default class Task {
     description = "",
     date = "",
     time = "",
-    priority = "low"
+    priority = "low",
+    project = "inbox"
   ) {
     this._id = crypto.randomUUID();
     this._title = title;
@@ -12,6 +13,7 @@ export default class Task {
     this._date = date;
     this.time = time;
     this._priority = priority;
+    this._project = project;
     this._status = "not complete";
   }
   get title() {
@@ -50,6 +52,13 @@ export default class Task {
   }
   set priority(priority) {
     this._priority = priority;
+  }
+
+  get project(){
+    return this._project;
+  }
+  set project(project) {
+    this._project = project;
   }
   get status() {
     return this._status;

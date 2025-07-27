@@ -179,6 +179,9 @@ select:hover {
 .custom-select {
   position: relative;
 }
+.custom-projects{
+  position: relative;
+}
 .options {
   position: absolute;
   background: white;
@@ -405,6 +408,12 @@ li:hover {
   align-items: center;
 }
 
+.task-project{
+  color: rgb(156, 93, 93);
+  font-size: 15px;
+  padding-left: 35px;
+}
+
 .task-title.completed{
   text-decoration: line-through;
   color: gray;
@@ -412,4 +421,31 @@ li:hover {
 .editsContainer{
   display: flex;
   gap: 10px;
+}
+.optionsP {
+  position: absolute;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  top: 100%;
+  margin-top: 1px;
+  width: 150%;
+}
+.optionsP > .option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  color: black;
+}
+.option:hover {
+  background-color: rgb(225, 222, 222);
+}
+.selectedP{
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.selectedP > img {
+  width: 17px;
 }
