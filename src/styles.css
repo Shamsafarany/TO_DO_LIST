@@ -12,10 +12,27 @@ body {
   --grayColor: rgb(189, 184, 184);
 }
 .sidebar {
-  border: solid black;
   width: 350px;
-  background-color: rgb(237, 173, 173);
+  background-color: rgb(234, 224, 194);
   transition: all 0.3s ease;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.containerProjects {
+  margin-left: 35px;
+  margin-top: 50px;
+  font-weight: 700;
+  color :rgb(162, 15, 15);
+  font-size: 20px;
+}
+.links{
+  text-decoration: underline;
+  color: var(--redColor);
+  font-size: 17px;
+  cursor: pointer;
+
 }
 @media (max-width: 700px) {
   .sidebar {
@@ -32,6 +49,7 @@ body {
   margin-top: 50px;
   width: 60%;
   min-width: 400px;
+  position: relative;
 }
 #add_task {
   font-weight: 300;
@@ -61,6 +79,12 @@ form {
   padding: 7px 10px;
   border-radius: 10px;
   padding-bottom: 0;
+  position: absolute;
+  top: 155px;
+  width: 95%;
+  z-index: 10;
+  background-color: white;
+  box-shadow: 0 0 20px;
 }
 #title {
   border: none;
@@ -179,7 +203,7 @@ select:hover {
 .custom-select {
   position: relative;
 }
-.custom-projects{
+.custom-projects {
   position: relative;
 }
 .options {
@@ -349,7 +373,7 @@ li:hover {
   gap: 10px;
   position: relative;
 }
-.date-pickerCont > img{
+.date-pickerCont > img {
   position: absolute;
   left: 70%;
   margin-bottom: 2px;
@@ -362,63 +386,63 @@ li:hover {
   font-size: 17px;
   color: var(--redColor);
 }
-.placeholderCard{
+.placeholderCard {
   padding: 4px 10px;
   border-radius: 5px;
   margin: 2px;
 }
 
-.task-item{
+.task-item {
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
 }
-.listDisplayContainer{
+.listDisplayContainer {
   display: flex;
   flex-direction: column;
   gap: 5px;
 }
-.task-title{
+.task-title {
   font-size: 20px;
 }
-.task-checkbox{
+.task-checkbox {
   cursor: pointer;
   width: 20px;
-
 }
-.task-description{
+.task-description {
   color: gray;
   font-size: 15px;
   padding-left: 35px;
 }
-.task-datetime, .task-priority{
+.task-datetime,
+.task-priority {
   color: rgb(156, 93, 93);
   font-size: 15px;
   padding-left: 35px;
 }
-.tasktitle{
+.tasktitle {
   display: flex;
   flex-direction: row;
   gap: 10px;
 }
-.task-datetime{
+.task-datetime {
   display: flex;
   gap: 10px;
   padding-left: 35px;
   align-items: center;
 }
 
-.task-project{
+.task-project {
   color: rgb(156, 93, 93);
   font-size: 15px;
   padding-left: 35px;
 }
 
-.task-title.completed{
+.task-title.completed {
   text-decoration: line-through;
   color: gray;
 }
-.editsContainer{
+.editsContainer {
   display: flex;
   gap: 10px;
 }
@@ -441,7 +465,7 @@ li:hover {
 .option:hover {
   background-color: rgb(225, 222, 222);
 }
-.selectedP{
+.selectedP {
   display: flex;
   align-items: center;
   gap: 6px;

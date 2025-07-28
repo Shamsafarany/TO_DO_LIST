@@ -12,7 +12,9 @@ const datepicker = require("js-datepicker");
 
 //get all elements IIFE
 const DOM = (() => {
+  const mainTitle = document.querySelector(".main");
   const sidebar = document.querySelector(".sidebar");
+  const sidebarProjects = document.querySelector(".containerProjects");
   const plus = document.querySelector("#plus");
   const add_task = document.querySelector("#add_task");
   const form = document.querySelector("form");
@@ -72,8 +74,17 @@ const DOM = (() => {
     hiddenProject,
     projectShow,
     taskListsContainer,
+    sidebarProjects,
+    mainTitle
   };
 })();
+let projects = {
+  inbox: [],
+  work: [],
+  education: [],
+  personal: [],
+};
+let previousProject;
 function displayForm() {
   DOM.plus.addEventListener("mouseover", () => {
     DOM.add_task.style.color = "var(--redColor)";
@@ -81,8 +92,9 @@ function displayForm() {
   DOM.plus.addEventListener("mouseleave", () => {
     DOM.add_task.style.color = "gray";
   });
-  DOM.plus.addEventListener("click", () => {
+  DOM.plus.addEventListener("click", () => { 
     formReset();
+    //allProjects(projects);
     DOM.form.classList.toggle("hidden");
     DOM.add_task_cont.classList.toggle("hidden");
     if (!DOM.form.classList.contains("hidden")) {
@@ -110,6 +122,7 @@ function displayForm() {
   displayDate();
   addTime();
   addProject();
+  displayProjectsSidebar(projects);
 }
 let reset = false;
 function showCurrentDate() {
@@ -678,12 +691,7 @@ let time;
 let priority;
 let project;
 
-let projects = {
-  inbox: [],
-  work: [],
-  education: [],
-  personal: [],
-};
+let editProject = false;
 
 function formSubmit() {
   DOMUI.form.addEventListener("submit", (e) => {
@@ -697,7 +705,10 @@ function formSubmit() {
     project = DOMUI.project.value || "inbox";
 
     if (editingTask !== null) {
+      console.log("edittin nowww");
+      
       const index = taskList.findIndex((t) => t.id === editingTask);
+      
       if (index !== -1) {
         taskList[index] = {
           ...taskList[index], // retain ID and status
@@ -708,7 +719,17 @@ function formSubmit() {
           priority,
           project,
         };
+        console.log(taskList[index]);
+       if (editProject) {
+        const i = taskList.findIndex((y) => y.project === previousProject);
+        if (previousProject!== project) {
+           projects[previousProject].splice(i, 1);
+           projects[project].push(taskList[index]);
+        }     
+       } 
       }
+      displayProject(project);
+      editProject = false;
       editingTask = null;
     } else {
       const newTask = new Task(
@@ -722,18 +743,24 @@ function formSubmit() {
 
       projects[project].push(newTask);
       taskList.push(newTask);
+       
+      //allProjects(projects);
     }
 
     DOM.form.classList.toggle("hidden");
     DOM.add_task_cont.classList.toggle("hidden");
     //renderList(taskList);
     allProjects(projects);
+   
   });
 }
 
 function formReset() {
   DOM.form.reset();
 
+  DOM.submit.disabled = true;
+  DOM.submit.style.opacity = "50%";
+  DOM.submit.style.cursor = "not-allowed";
   // Reset priority
   DOM.hiddenInput.value = "";
   DOM.selected.innerHTML = "";
@@ -752,6 +779,7 @@ function formReset() {
   DOM.selected.appendChild(text);
   DOM.customSelect.style.borderColor = "rgb(189, 184, 184)";
   DOM.selected.style.color = "gray";
+
   DOM.dateDisplay.innerHTML = "";
   DOM.hiddenDate.value = "";
   const date = new Date();
@@ -796,37 +824,94 @@ function formReset() {
   DOM.showTimeTitle.innerHTML = `Time`;
   DOM.showTimeTitle.style.color = "gray";
   DOM.timeBtn.querySelector(".clearTimeBtn")?.remove();
+
+  //reset project
+  DOM.hiddenProject.value = "";
+  DOM.showProject.innerHTML = "";
+
+  const img3 = document.createElement("img");
+  img3.src = inbox;
+  img3.style.width = "15px";
+  img3.style.marginRight = "5px";
+
+  const text3 = document.createElement("span");
+  text3.textContent = "Inbox";
+  text3.style.color = "black";
+  text3.style.display = "inline-block";
+
+  DOM.showProject.appendChild(img3);
+  DOM.showProject.appendChild(text3);
+  DOM.projectShow.style.border = "none";
 }
 let editingTask = null;
 
 function allProjects(projects) {
-   DOM.taskListsContainer.innerHTML="";
+  DOM.taskListsContainer.innerHTML = "";
   for (const project in projects) {
+    DOM.mainTitle.innerHTML = "ALL TASKS";
     const section = document.createElement("div");
     section.classList.add("project-section");
-
     const title = document.createElement("h3");
     title.textContent = project;
     section.appendChild(title);
-
     const list = document.createElement("ul");
     section.appendChild(list);
     DOM.taskListsContainer.appendChild(section);
+    renderList(projects[project], list, project);
 
-    renderList(projects[project], list);
   }
 }
-function renderList(taskList, list) {
+function displayProjectsSidebar(projects) {
+  for (const project in projects) {
+    const link = document.createElement("p");
+    link.textContent = project;
+    link.classList.add("links");
+    DOM.sidebarProjects.appendChild(link);
+    link.addEventListener("click", () => {
+      if(project==="inbox") {
+        allProjects(projects);
+      } else {
+        displayProject(project);
+      }    
+    })
+  }
+}
+
+function displayProject(project) {
+  DOM.taskListsContainer.innerHTML="";
+  DOM.mainTitle.innerHTML = `${project}`;
+    const section = document.createElement("div");
+    section.classList.add("project-section");
+    const list = document.createElement("ul");
+    section.appendChild(list);
+    DOM.taskListsContainer.appendChild(section);
+  
+    renderList(projects[project], list, project);
+  
+}
+function renderList(sentList, list, project) {
   const display = document.querySelector(".completeCount");
   let count = 0;
-  
-  list.innerHTML = "";
+  for(let i = 0; i < sentList.length; i++) {
+    console.log(sentList[i]);
+  }
 
-  for (let i = 0; i < taskList.length; i++) {
-    const task = taskList[i];
+  list.innerHTML = "";
+  if (sentList.length === 0) {
+    const p = document.createElement("p");
+    p.innerHTML = "No tasks added yet";
+    p.style.fontSize = "15px";
+    p.style.color = "brown";
+    DOM.taskListsContainer.appendChild(p);
+    return;
+  }
+
+  for (let i = 0; i < sentList.length; i++) {
+    const task = sentList[i];
     const hr = document.createElement("hr");
     if (i !== 0) {
-      DOMUI.taskList.appendChild(hr);
+      //DOMUI.taskList.appendChild(hr);
+     list.appendChild(hr);
     }
     const li = document.createElement("li");
     li.classList.add("task-item");
@@ -938,17 +1023,27 @@ function renderList(taskList, list) {
     li.appendChild(editCont);
     list.appendChild(li);
 
-    DOMUI.taskList.appendChild(li);
+    //DOMUI.taskList.appendChild(li);
 
     trashImg.addEventListener("click", () => {
+      console.log("delete this");
+      sentList.splice(i, 1);
       taskList.splice(i, 1);
-      renderList(taskList);
+      //renderList(sentList, list);
+      displayProject(project);
+      allProjects(projects);
     });
 
     editImg.addEventListener("click", () => {
       editingTask = task.id;
+      previousProject = task.project;
       DOM.form.classList.toggle("hidden");
       DOM.form.classList.add("edit");
+      console.log("editting only");
+      DOM.showProject.addEventListener("click", () =>{
+        console.log("editting project");
+        editProject = true;
+      })
       DOM.add_task_cont.classList.toggle("hidden");
     });
   }
