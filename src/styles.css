@@ -18,14 +18,30 @@ body {
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  align-items: flex-start;
+  padding-left: 50px;
+  padding-top: 100px;
+  gap: 10px;
 }
 .containerProjects {
-  margin-left: 35px;
-  margin-top: 50px;
   font-weight: 700;
   color :rgb(162, 15, 15);
   font-size: 20px;
+}
+.addTaskSidebar{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  cursor: pointer;
+}
+.addTaskSidebar > h5, .addTaskSidebar > div{
+  font-size: 20px;
+  color: rgb(162, 15, 15);
+  
+}
+.addTaskSidebar > h5{
+  text-decoration: underline;
 }
 .links{
   text-decoration: underline;
@@ -49,6 +65,7 @@ body {
   margin-top: 50px;
   width: 60%;
   min-width: 400px;
+  max-width: 600px;
   position: relative;
 }
 #add_task {
@@ -213,6 +230,8 @@ select:hover {
   border-radius: 10px;
   top: 100%;
   margin-top: 1px;
+  z-index: 20;
+  
 }
 .option {
   display: flex;
@@ -396,6 +415,8 @@ li:hover {
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
+  box-shadow: 0 0 10px;
+  max-width: 600px;
 }
 .listDisplayContainer {
   display: flex;
@@ -453,7 +474,7 @@ li:hover {
   border-radius: 10px;
   top: 100%;
   margin-top: 1px;
-  width: 150%;
+  width: 130px;
 }
 .optionsP > .option {
   display: flex;
@@ -472,4 +493,48 @@ li:hover {
 }
 .selectedP > img {
   width: 17px;
+}
+
+#newproject{
+  position: relative;
+}
+.typeProject{
+  border: 1px solid var(--grayColor);
+  position: absolute;
+  left: 93%;
+  bottom: -600%;
+  z-index: 10;
+  background-color: white;
+  border-radius: 10px;
+}
+#customProjectInput{
+  padding: 10px;
+  margin: 10px;
+  font-size: 17px;
+  outline: none;
+  border: none;
+  border-bottom: 2px solid var(--grayColor);
+}
+
+.buttonsAdd{
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+  gap: 10px;
+  padding: 10px;
+}
+.projectP{
+  font-size: 20px;
+  border-radius: 5px;
+  padding: 0px 10px;
+  background-color: white;
+}
+#x{
+  font-weight: 300;
+  border: 1px solid var(--redColor);
+  color: var(--redColor)
+}
+#addP{
+  border: 1px solid green;
+  color: green;
 }
