@@ -697,7 +697,7 @@ function addProject() {
       DOM.projectShow.style.color = "brown";
       DOM.showProject.appendChild(clearBtn);
       if (option.dataset.value !== "new") {
-        DOM.projectDisplay.classList.toggle("hidden");
+        DOM.projectDisplay.classList.add("hidden");
       }
       DOM.hiddenProject.value = option.dataset.value;
       console.log(DOM.hiddenProject.value);
@@ -855,6 +855,11 @@ function formSubmit() {
       );
       projects[project].push(newTask);
       taskList.push(newTask);
+      projects[project].sort((a, b) => {
+        if (a.status === b.status) return 0;
+        if (a.status === "complete") return 1;
+        return -1;
+      });
     }
 
     DOM.form.classList.toggle("hidden");
@@ -1045,6 +1050,11 @@ function renderList(sentList, list, project) {
 
     const taskTitleDiv = document.createElement("div");
     taskTitleDiv.classList.add("tasktitle");
+    taskTitleDiv.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+
 
     const checkbox = document.createElement("input");
     checkbox.type = "checkbox";

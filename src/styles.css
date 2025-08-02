@@ -12,7 +12,8 @@ body {
   --grayColor: rgb(189, 184, 184);
 }
 .sidebar {
-  width: 350px;
+
+  width: 300px;
   background-color: rgb(234, 224, 194);
   transition: all 0.3s ease;
   box-sizing: border-box;
@@ -22,6 +23,11 @@ body {
   padding-left: 50px;
   padding-top: 100px;
   gap: 10px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  overflow-y: auto;
 }
 .containerProjects {
   font-weight: 700;
@@ -67,6 +73,11 @@ body {
   min-width: 400px;
   max-width: 600px;
   position: relative;
+}
+@media (min-width: 701px) {
+  .body-cont {
+    margin-left: 300px; /* Sidebar width */
+  }
 }
 #add_task {
   font-weight: 300;
