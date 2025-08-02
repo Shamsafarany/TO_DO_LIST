@@ -5,16 +5,20 @@ export default class Task {
     date = "",
     time = "",
     priority = "low",
-    project = "inbox"
+    project = "inbox",
+    status="not complete"
   ) {
     this._id = crypto.randomUUID();
     this._title = title;
     this._description = description;
     this._date = date;
-    this.time = time;
+    this._time = time;
     this._priority = priority;
     this._project = project;
-    this._status = "not complete";
+    this._status = status;
+  }
+  get id(){
+    return this._id;
   }
   get title() {
     return this._title;
@@ -38,7 +42,7 @@ export default class Task {
     return this._date;
   }
   set date(date) {
-    this.date = date;
+    this._date = date;
   }
   get time() {
     return this._time;
@@ -70,7 +74,5 @@ export default class Task {
       console.log("Invalid input");
     }
   }
-  toggleStatus() {
-    this._status = this._status === "complete" ? "not complete" : "complete";
-  }
+
 }

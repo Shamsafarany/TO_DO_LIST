@@ -5,6 +5,7 @@ import clock from "../images/clock.png";
 import trash from "../images/trash_12616431.png";
 import pen from "../images/pen_5948978.png";
 import inbox from "../images/inbox_8299973.png";
+import plus from "../images/plus.png";
 import "js-datepicker/dist/datepicker.min.css";
 import Task from "./task.js";
 import DOMUI from "./ui.js";
@@ -43,6 +44,8 @@ const DOM = (() => {
   const hiddenProject = document.querySelector("#project");
   const projectShow = document.querySelector(".projects");
   const taskListsContainer = document.querySelector(".task-list");
+  const addTasksidebar = document.querySelector("#add_taskS");
+  const plusSide = document.querySelector("#plusS");
 
   return {
     sidebar,
@@ -75,15 +78,42 @@ const DOM = (() => {
     projectShow,
     taskListsContainer,
     sidebarProjects,
-    mainTitle
+    mainTitle,
+    addTasksidebar,
+    plusSide,
   };
 })();
+
 let projects = {
-  inbox: [],
-  work: [],
-  education: [],
-  personal: [],
+  Inbox: [],
+  Work: [],
+  Education: [],
+  Personal: [],
 };
+
+console.log(projects);
+projects = loadProjects();
+saveProjects(projects);
+allProjects(projects);
+let customProjects = loadCustomProjects();
+console.log(customProjects);
+
+saveCustomProjects(customProjects);
+customProjects = loadCustomProjects();
+console.log(customProjects);
+
+
+let taskList = [];
+
+
+for (const key in projects) {
+  taskList.push(...projects[key]);
+}
+
+const completedCount = calculateCompletedCount(projects);
+const displayss = document.querySelector(".completeCount");
+displayss.innerHTML = `${completedCount} tasks completed.`;
+
 let previousProject;
 function displayForm() {
   DOM.plus.addEventListener("mouseover", () => {
@@ -92,9 +122,9 @@ function displayForm() {
   DOM.plus.addEventListener("mouseleave", () => {
     DOM.add_task.style.color = "gray";
   });
-  DOM.plus.addEventListener("click", () => { 
+  DOM.plus.addEventListener("click", () => {
     formReset();
-    //allProjects(projects);
+    allProjects(projects);
     DOM.form.classList.toggle("hidden");
     DOM.add_task_cont.classList.toggle("hidden");
     if (!DOM.form.classList.contains("hidden")) {
@@ -641,6 +671,7 @@ function addProject() {
     DOM.projectDisplay.classList.toggle("hidden");
   });
   DOM.projectDisplay.querySelectorAll(".option").forEach((option) => {
+    console.log(option);
     option.addEventListener("click", () => {
       const clearBtn = document.createElement("span");
       clearBtn.textContent = "×";
@@ -652,14 +683,84 @@ function addProject() {
       DOM.projectShow.style.borderColor = "brown";
       DOM.projectShow.style.color = "brown";
       DOM.showProject.appendChild(clearBtn);
-      DOM.projectDisplay.classList.toggle("hidden");
+      if (option.dataset.value !== "new") {
+        DOM.projectDisplay.classList.toggle("hidden");
+      }
       DOM.hiddenProject.value = option.dataset.value;
       console.log(DOM.hiddenProject.value);
+      if (option.dataset.value === "new") {
+        const container = document.querySelector(".typeProject");
+        const close = document.querySelector("#x");
+        const adds = document.querySelector("#addP");
+        const projectName = document.querySelector("#customProjectInput");
+
+        container.classList.remove("hidden");
+        adds.addEventListener("click", () => {
+          const div = document.createElement("div");
+          div.classList.add("option");
+          const img = document.createElement("img");
+          img.src = plus;
+          const span = document.createElement("span");
+          let name = projectName.value;
+          DOM.showProject.innerHTML = `${name}`;
+          span.innerHTML = `${name}`;
+          div.appendChild(img);
+          div.appendChild(span);
+          DOM.projectDisplay.appendChild(div);
+          DOM.showProject.appendChild(clearBtn);
+          DOM.projectDisplay.classList.toggle("hidden");
+          DOM.hiddenProject.value = `${name}`;
+
+          // Save to customProjects array
+          //customProjects = loadCustomProjects();
+          if (!customProjects.includes(name)) {
+            customProjects.push(name);
+            console.log("saved");
+            saveCustomProjects(customProjects);
+          }
+
+          div.addEventListener("click", () => {
+            DOM.showProject.innerHTML = div.innerHTML;
+            DOM.projectShow.style.border = "solid";
+            DOM.projectShow.style.borderColor = "brown";
+            DOM.projectShow.style.color = "brown";
+            DOM.hiddenProject.value = `${name}`;
+            DOM.projectDisplay.classList.toggle("hidden");
+            DOM.showProject.appendChild(clearBtn);
+          });
+          saveProjects(projects);
+          addNewProject(name);
+        });
+        close.addEventListener("click", () => {
+          container.classList.toggle("hidden");
+          DOM.showProject.innerHTML = "";
+          DOM.hiddenProject.value = "";
+          DOM.projectDisplay.classList.toggle("hidden");
+
+          // Create icon
+          const img = document.createElement("img");
+          img.src = inbox;
+          img.style.width = "15px";
+          img.style.marginRight = "5px";
+
+          // Create span text
+          const text = document.createElement("span");
+          text.textContent = "Inbox";
+          text.style.display = "inline-block";
+
+          // Append both
+          DOM.showProject.appendChild(img);
+          DOM.showProject.appendChild(text);
+          DOM.projectShow.style.borderColor = "rgb(189, 184, 184)";
+          DOM.projectShow.style.color = "gray";
+        });
+      }
 
       clearBtn.addEventListener("click", (e) => {
         e.stopPropagation();
         DOM.showProject.innerHTML = "";
         DOM.hiddenProject.value = "";
+        DOM.projectDisplay.classList.toggle("hidden");
 
         // Create icon
         const img = document.createElement("img");
@@ -675,21 +776,18 @@ function addProject() {
         // Append both
         DOM.showProject.appendChild(img);
         DOM.showProject.appendChild(text);
-        DOM.projectShow.style.borderColor = "rgb(189, 184, 184)";
-        DOM.projectShow.style.color = "gray";
+        DOM.projectShow.style.border= "none";
+        DOM.projectShow.style.color = "black";
       });
     });
+
   });
+ 
+  for (let i = 0; i < customProjects.length; i++) {
+    addProjectOptionToDropdown(customProjects[i]);
+  }
 }
 displayForm();
-
-let taskList = [];
-let title;
-let description;
-let date;
-let time;
-let priority;
-let project;
 
 let editProject = false;
 
@@ -697,40 +795,41 @@ function formSubmit() {
   DOMUI.form.addEventListener("submit", (e) => {
     e.preventDefault();
 
-    title = DOMUI.titleInput.value;
-    description = DOMUI.descriptionInput.value;
-    date = DOMUI.dueDateInput.value || "No date";
-    time = DOMUI.time.value || "No time";
-    priority = DOMUI.priorityInput.value || "low";
-    project = DOMUI.project.value || "inbox";
+    let title = DOMUI.titleInput.value;
+    let description = DOMUI.descriptionInput.value;
+    let date = DOMUI.dueDateInput.value || "No date";
+    let time = DOMUI.time.value || "No time";
+    let priority = DOMUI.priorityInput.value || "low";
+    let project = DOMUI.project.value || "Inbox";
+    let status = "not complete";
 
     if (editingTask !== null) {
-      console.log("edittin nowww");
-      
       const index = taskList.findIndex((t) => t.id === editingTask);
-      
+
       if (index !== -1) {
-        taskList[index] = {
-          ...taskList[index], // retain ID and status
-          title,
-          description,
-          date,
-          time,
-          priority,
-          project,
-        };
-        console.log(taskList[index]);
-       if (editProject) {
-        const i = taskList.findIndex((y) => y.project === previousProject);
-        if (previousProject!== project) {
-           projects[previousProject].splice(i, 1);
-           projects[project].push(taskList[index]);
-        }     
-       } 
+        const task = taskList[index];
+
+        task.title = title;
+        task.description = description;
+        task.date = date;
+        task.time = time;
+        task.priority = priority;
+        task.project = project;
+        task.status = status;
+
+        if (editProject) {
+          const i = projects[previousProject].findIndex(
+            (y) => y.id === editingTask
+          );
+          console.log("moving task");
+          if (previousProject !== project) {
+            projects[previousProject].splice(i, 1);
+            projects[project].push(task);
+          }
+        }
+        editProject = false;
+        editingTask = null;
       }
-      displayProject(project);
-      editProject = false;
-      editingTask = null;
     } else {
       const newTask = new Task(
         title,
@@ -738,20 +837,18 @@ function formSubmit() {
         date,
         time,
         priority,
-        project
+        project,
+        status
       );
-
       projects[project].push(newTask);
       taskList.push(newTask);
-       
-      //allProjects(projects);
     }
 
     DOM.form.classList.toggle("hidden");
     DOM.add_task_cont.classList.toggle("hidden");
-    //renderList(taskList);
+
+    saveProjects(projects);
     allProjects(projects);
-   
   });
 }
 
@@ -858,43 +955,56 @@ function allProjects(projects) {
     section.appendChild(list);
     DOM.taskListsContainer.appendChild(section);
     renderList(projects[project], list, project);
-
   }
 }
 function displayProjectsSidebar(projects) {
+  DOM.plusSide.addEventListener("click", () => {
+    formReset();
+    allProjects(projects);
+    DOM.form.classList.remove("hidden");
+    DOM.add_task_cont.classList.toggle("hidden");
+    if (!DOM.form.classList.contains("hidden")) {
+      showCurrentDate();
+    }
+  });
+  DOM.addTasksidebar.addEventListener("click", () => {
+    formReset();
+    allProjects(projects);
+    DOM.form.classList.remove("hidden");
+    DOM.add_task_cont.classList.toggle("hidden");
+    if (!DOM.form.classList.contains("hidden")) {
+      showCurrentDate();
+    }
+  });
+
   for (const project in projects) {
     const link = document.createElement("p");
     link.textContent = project;
     link.classList.add("links");
     DOM.sidebarProjects.appendChild(link);
     link.addEventListener("click", () => {
-      if(project==="inbox") {
+      if (project === "Inbox") {
         allProjects(projects);
       } else {
         displayProject(project);
-      }    
-    })
+      }
+    });
   }
 }
 
 function displayProject(project) {
-  DOM.taskListsContainer.innerHTML="";
+  DOM.taskListsContainer.innerHTML = "";
   DOM.mainTitle.innerHTML = `${project}`;
-    const section = document.createElement("div");
-    section.classList.add("project-section");
-    const list = document.createElement("ul");
-    section.appendChild(list);
-    DOM.taskListsContainer.appendChild(section);
-  
-    renderList(projects[project], list, project);
-  
+  const section = document.createElement("div");
+  section.classList.add("project-section");
+  const list = document.createElement("ul");
+  section.appendChild(list);
+  DOM.taskListsContainer.appendChild(section);
+
+  renderList(projects[project], list, project);
 }
 function renderList(sentList, list, project) {
   const display = document.querySelector(".completeCount");
-  let count = 0;
-  for(let i = 0; i < sentList.length; i++) {
-    console.log(sentList[i]);
-  }
 
   list.innerHTML = "";
   if (sentList.length === 0) {
@@ -905,38 +1015,28 @@ function renderList(sentList, list, project) {
     DOM.taskListsContainer.appendChild(p);
     return;
   }
-
   for (let i = 0; i < sentList.length; i++) {
     const task = sentList[i];
+    console.log(sentList[i]);
     const hr = document.createElement("hr");
     if (i !== 0) {
-      //DOMUI.taskList.appendChild(hr);
-     list.appendChild(hr);
+      list.appendChild(hr);
     }
     const li = document.createElement("li");
     li.classList.add("task-item");
+    li.style.border = "solid";
+    li.style.borderColor = "rgb(189, 184, 184)";
+    li.style.borderRadius = "5px";
+    li.style.backgroundColor = "rgba(235, 230, 214, 1)";
+    li.style.padding = "10px";
 
     const taskTitleDiv = document.createElement("div");
     taskTitleDiv.classList.add("tasktitle");
 
     const checkbox = document.createElement("input");
     checkbox.type = "checkbox";
+    checkbox.checked = task.status === "complete";
     checkbox.classList.add("task-checkbox");
-    checkbox.addEventListener("change", () => {
-      if (checkbox.checked) {
-        task.status = "completed";
-        count++;
-        display.innerHTML = "";
-        display.innerHTML = `${count} tasks completed.`;
-        titleDiv.classList.add("completed");
-      } else {
-        task.status = "not completed";
-        count--;
-        display.innerHTML = "";
-        display.innerHTML = `${count} tasks completed.`;
-        titleDiv.classList.remove("completed");
-      }
-    });
 
     const titleDiv = document.createElement("div");
     titleDiv.classList.add("task-title");
@@ -945,6 +1045,30 @@ function renderList(sentList, list, project) {
     // Append index and title to taskTitleDiv
     taskTitleDiv.appendChild(checkbox);
     taskTitleDiv.appendChild(titleDiv);
+
+    if (checkbox.checked) {
+      titleDiv.classList.add("completed");
+    } else {
+      titleDiv.classList.remove("completed");
+    }
+    checkbox.addEventListener("change", () => {
+      // Update status right away
+      task.status = checkbox.checked ? "complete" : "not complete";
+
+      const completedCount = sentList.filter(
+        (t) => t.status === "complete"
+      ).length;
+
+      display.innerHTML = `${completedCount} tasks completed.`;
+
+      if (checkbox.checked) {
+        titleDiv.classList.add("completed");
+      } else {
+        titleDiv.classList.remove("completed");
+      }
+
+      saveProjects(projects);
+    });
 
     // Description div
     const descDiv = document.createElement("div");
@@ -966,8 +1090,6 @@ function renderList(sentList, list, project) {
 
     dateDiv.appendChild(calendarImg);
     dateDiv.appendChild(document.createTextNode(task.date));
-    console.log(task.date);
-
     // Time div
     const timeDiv = document.createElement("div");
     const clockImg = document.createElement("img");
@@ -988,11 +1110,25 @@ function renderList(sentList, list, project) {
     priorityDiv.textContent = task.priority;
     console.log(task.priority);
 
-    // Project div
-    const projectDiv = document.createElement("div");
-    projectDiv.classList.add("task-project");
-    projectDiv.textContent = task.project;
-    console.log(task.project);
+    switch (task.priority) {
+      case "medium":
+        li.style.backgroundColor = "rgba(210, 133, 133, 1)";
+        li.style.color = "white";
+        timeDiv.style.color = "white";
+        descDiv.style.color = "white";
+        dateDiv.style.color = "white";
+        priorityDiv.style.color = "white";
+        break;
+      case "high": {
+        li.style.backgroundColor = "rgba(208, 75, 75, 1)";
+        li.style.color = "white";
+        timeDiv.style.color = "white";
+        descDiv.style.color = "white";
+        dateDiv.style.color = "white";
+        priorityDiv.style.color = "white";
+        break;
+      }
+    }
 
     //delete div
     const deletes = document.createElement("div");
@@ -1016,37 +1152,310 @@ function renderList(sentList, list, project) {
     displayCont.appendChild(descDiv);
     displayCont.appendChild(dateTimeDiv);
     displayCont.appendChild(priorityDiv);
-    displayCont.appendChild(projectDiv);
     editCont.appendChild(deletes);
 
     li.appendChild(displayCont);
     li.appendChild(editCont);
     list.appendChild(li);
 
-    //DOMUI.taskList.appendChild(li);
-
     trashImg.addEventListener("click", () => {
       console.log("delete this");
       sentList.splice(i, 1);
       taskList.splice(i, 1);
-      //renderList(sentList, list);
+
       displayProject(project);
       allProjects(projects);
+      saveProjects(projects);
     });
 
     editImg.addEventListener("click", () => {
+      formReset();
       editingTask = task.id;
+      populateForm(task);
       previousProject = task.project;
       DOM.form.classList.toggle("hidden");
-      DOM.form.classList.add("edit");
-      console.log("editting only");
-      DOM.showProject.addEventListener("click", () =>{
-        console.log("editting project");
+      DOM.showProject.addEventListener("click", () => {
         editProject = true;
-      })
+      });
       DOM.add_task_cont.classList.toggle("hidden");
     });
+
+    //const sentlist = sortTasks(sentList);
+    //allProjects(sentlist);
   }
 }
 
 formSubmit();
+
+function addNewProject(name) {
+  projects[name] = [];
+  console.log(projects);
+  DOM.sidebarProjects.innerHTML = "";
+  displayProjectsSidebar(projects);
+}
+
+function saveProjects(projects) {
+  console.log(JSON.stringify(projects));
+  localStorage.setItem("projects", JSON.stringify(projects));
+}
+
+function loadProjects() {
+  let rawProjects;
+  try {
+    const stored = localStorage.getItem("projects");
+    rawProjects = stored ? JSON.parse(stored) : {};
+  } catch (e) {
+    console.warn("Invalid JSON for 'projects' in localStorage. Resetting.");
+    rawProjects = {};
+  }
+  const loadedProjects = {};
+
+  for (const key in rawProjects) {
+    loadedProjects[key] = rawProjects[key].map(
+      (obj) =>
+        new Task(
+          obj._title,
+          obj._description,
+          obj._date,
+          obj._time,
+          obj._priority,
+          obj._project,
+          obj._status
+        )
+    );
+  }
+
+  return loadedProjects;
+}
+
+function calculateCompletedCount(projects) {
+  let count = 0;
+  for (const project in projects) {
+    count += projects[project].filter(
+      (task) => task.status === "complete"
+    ).length;
+  }
+  return count;
+}
+
+function sortTasks(taskArray) {
+  return taskArray.slice().sort((a, b) => {
+    const aStatus = a._status || a.status;
+    const bStatus = b._status || b.status;
+
+    if (aStatus === "complete" && bStatus !== "complete") return 1;
+    if (aStatus !== "complete" && bStatus === "complete") return -1;
+
+    return 0;
+  });
+}
+
+function populateForm(task) {
+  DOMUI.titleInput.value = task.title;
+  DOMUI.descriptionInput.value = task.description;
+  DOMUI.dueDateInput.value = task.date;
+  DOMUI.time.value = task.time;
+  DOMUI.priorityInput.value = task.priority;
+  DOMUI.project.value = task.project;
+
+  //fix add
+  DOM.submit.textContent = "Edit";
+  DOM.submit.style.paddingLeft = "30px";
+  if (DOM.title.value.trim() !== "") {
+    DOM.submit.disabled = false;
+    DOM.submit.style.cursor = "pointer";
+    DOM.submit.style.opacity = 1;
+  } else {
+    DOM.submit.disabled = true;
+    DOM.submit.style.opacity = "50%";
+    DOM.submit.style.cursor = "not-allowed";
+  }
+
+  //priority
+  const clearBtn = document.createElement("span");
+  DOM.selected.innerHTML = "";
+  clearBtn.textContent = " ×";
+  clearBtn.style.cursor = "pointer";
+  clearBtn.style.marginLeft = "8px";
+  clearBtn.style.color = "gray";
+  const img = document.createElement("img");
+  img.src = flagIcon;
+  img.style.width = "15px";
+  img.style.marginRight = "5px";
+  const text = document.createElement("span");
+  text.textContent = `${task.priority}`;
+  text.style.display = "inline-block";
+  DOM.selected.appendChild(img);
+  DOM.selected.appendChild(text);
+  DOM.customSelect.style.borderColor = "red";
+  DOM.selected.style.color = "red";
+  DOM.selected.appendChild(clearBtn);
+  DOM.options.classList.add("hidden");
+  clearBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    DOM.selected.innerHTML = "";
+    DOM.hiddenInput.value = "";
+    const img = document.createElement("img");
+    img.src = flagIcon;
+    img.style.width = "15px";
+    img.style.marginRight = "5px";
+    const text = document.createElement("span");
+    text.textContent = "Priority";
+    text.style.display = "inline-block";
+    DOM.selected.appendChild(img);
+    DOM.selected.appendChild(text);
+    DOM.customSelect.style.borderColor = "rgb(189, 184, 184)";
+    DOM.selected.style.color = "gray";
+  });
+
+  //projects
+  const clearBtn2 = document.createElement("span");
+  clearBtn2.textContent = "×";
+  clearBtn2.style.cursor = "pointer";
+  clearBtn2.style.marginLeft = "8px";
+  clearBtn2.style.color = "gray";
+  DOM.showProject.innerHTML = `${task.project}`;
+  DOM.projectShow.style.border = "solid";
+  DOM.projectShow.style.borderColor = "brown";
+  DOM.projectShow.style.color = "brown";
+  DOM.showProject.appendChild(clearBtn2);
+  clearBtn2.addEventListener("click", (e) => {
+    e.stopPropagation();
+    DOM.showProject.innerHTML = "";
+    DOM.hiddenProject.value = "";
+    DOM.projectDisplay.classList.toggle("hidden");
+
+    // Create icon
+    const img = document.createElement("img");
+    img.src = inbox;
+    img.style.width = "15px";
+    img.style.marginRight = "5px";
+
+    // Create span text
+    const text = document.createElement("span");
+    text.textContent = "Inbox";
+    text.style.display = "inline-block";
+
+    // Append both
+    DOM.showProject.appendChild(img);
+    DOM.showProject.appendChild(text);
+    DOM.projectShow.style.borderColor = "rgb(189, 184, 184)";
+    DOM.projectShow.style.color = "gray";
+
+    //Date
+    const clearBtn3 = document.createElement("span");
+    clearBtn3.textContent = " ×";
+    clearBtn3.style.cursor = "pointer";
+    clearBtn3.style.marginLeft = "8px";
+    clearBtn3.style.color = "gray";
+
+    DOM.dateDisplay.appendChild(clearBtn3);
+
+    clearBtn3.addEventListener("click", (e) => {
+      e.stopPropagation();
+      DOM.dateDisplay.innerHTML = "";
+      DOM.hiddenDate.value = "";
+      const date = new Date();
+      const day = date.getDate();
+      const month = date.toLocaleString("default", { month: "short" });
+
+      DOM.dateDisplayCard.querySelector(".dateCard")?.remove();
+      DOM.chosenDate.querySelector(".dateCard")?.remove();
+
+      const hasDate = DOM.chosenDate.querySelector(".dateCard");
+      const hasTime = DOM.chosenDate.querySelector(".timeCard");
+
+      if (!hasDate && !hasTime) {
+        const placeholder = document.createElement("span");
+        placeholder.classList.add("placeholderCard");
+        placeholder.textContent = `${day} ${month}`;
+        placeholder.style.color = "gray";
+        placeholder.style.backgroundColor = "#eee";
+        DOM.chosenDate.appendChild(placeholder);
+      }
+      dateCont.style.borderColor = "rgb(189, 184, 184)";
+
+      // Create icon
+      const img = document.createElement("img");
+      img.src = calendar;
+      img.style.width = "15px";
+      img.style.marginRight = "5px";
+
+      // Create span text
+      const text = document.createElement("span");
+      text.textContent = "Date";
+      text.style.color = "gray";
+      text.style.display = "inline-block";
+
+      DOM.dateDisplay.appendChild(img);
+      DOM.dateDisplay.appendChild(text);
+      card.remove();
+    });
+  });
+}
+function saveCustomProjects(customProjects) {
+  localStorage.setItem("customProjects", JSON.stringify(customProjects));
+}
+function loadCustomProjects() {
+  const data = localStorage.getItem("customProjects");
+  try {
+    const parsed = JSON.parse(data);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch (e) {
+    return [];
+  }
+}
+
+
+function addProjectOptionToDropdown(name) {
+  const div = document.createElement("div");
+  div.classList.add("option");
+  const img = document.createElement("img");
+  img.src = plus;
+  const span = document.createElement("span");
+  span.textContent = name;
+  div.appendChild(img);
+  div.appendChild(span);
+  DOM.projectDisplay.appendChild(div);
+  
+
+  // Make it selectable
+  div.addEventListener("click", () => {
+    DOM.hiddenProject.value = name;
+    DOM.showProject.innerHTML = name;
+    DOM.projectDisplay.classList.add("hidden");
+    DOM.projectShow.style.border = "solid";
+    DOM.projectShow.style.borderColor = "brown";
+    DOM.projectShow.style.color = "brown";
+    const clearBtn = document.createElement("span");
+    clearBtn.textContent = "×";
+    clearBtn.style.cursor = "pointer";
+    clearBtn.style.marginLeft = "8px";
+    clearBtn.style.color = "gray";
+    DOM.showProject.appendChild(clearBtn);
+
+     clearBtn.addEventListener("click", (e) => {
+       e.stopPropagation();
+       DOM.showProject.innerHTML = "";
+       DOM.hiddenProject.value = "";
+       DOM.projectDisplay.classList.toggle("hidden");
+
+       // Create icon
+       const img = document.createElement("img");
+       img.src = inbox;
+       img.style.width = "15px";
+       img.style.marginRight = "5px";
+
+       // Create span text
+       const text = document.createElement("span");
+       text.textContent = "Inbox";
+       text.style.display = "inline-block";
+
+       // Append both
+       DOM.showProject.appendChild(img);
+       DOM.showProject.appendChild(text);
+       DOM.projectShow.style.border= "none";
+       DOM.projectShow.style.color = "black";
+     });
+  });
+}

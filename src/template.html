@@ -7,10 +7,14 @@
   </head>
   <body>
     <div class="sidebar">
-       
+       <div class="addTaskSidebar">
+          <div id="plusS">+</div>
+          <h5 id="add_taskS">Add Task</h5>
+       </div>
       <div class="containerProjects">  
         View projects         
       </div>
+
     </div>
     <div class="body-cont">
       <div class="body">
@@ -142,21 +146,28 @@
                 <span>Inbox </span>
               </div>
               <div class="optionsP hidden">
-                <div data-value="work" class="option">
+                <div data-value="Work" class="option">
                   <img src="../images/work_12133020.png" alt="" />
                   Work
                 </div>
-                <div data-value="education" class="option">
+                <div data-value="Education" class="option">
                   <img src="../images/education_3197944.png" alt="" />
                   Education
                 </div>
-                <div data-value="personal" class="option">
+                <div data-value="Personal" class="option">
                   <img src="../images/user-profile_9549748.png" alt="" />
                   Personal
                 </div>
-                <div data-value="new" class="option">
+                <div data-value="new" class="option" id="newproject">
                   <img src="../images/plus.png" alt="" />
                   New Project
+                  <div class="typeProject hidden" >
+                    <input type="text" placeholder="Project name" id="customProjectInput">
+                    <div class="buttonsAdd">
+                      <button class="projectP" id="x">x</button>
+                      <button class="projectP" id="addP" type="submit">+</button>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
