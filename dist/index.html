@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>To_DO_List</title>
+  <script defer src="main.js"></script></head>
+  <body>
+    <div class="sidebar">
+       <div class="addTaskSidebar">
+          <div id="plusS">+</div>
+          <h5 id="add_taskS">Add Task</h5>
+       </div>
+      <div class="containerProjects">  
+        View projects         
+      </div>
+
+    </div>
+    <div class="body-cont">
+      <div class="body">
+        <h1 class="main">ALL TASKS</h1>
+        <p class="completeCount">0 tasks completed.</p>
+        <div class="task-list"></div>
+        <hr />
+        <div class="add_task_cont">
+          <div id="plus">+</div>
+          <h5 id="add_task">Add Task</h5>
+        </div>
+        <form action="" class="hidden" autocomplete="off">
+          <div class="add_task_display">
+            <div class="dateDisplayCard"></div>
+            <input
+              type="text"
+              placeholder="Plan team lunch Jan 10 at 12:30pm"
+              id="title"
+              required
+            />
+            <input type="text" placeholder="Description" id="description" />
+            <div class="cards">
+              <div class="card date-cont">
+                <div class="date-display">
+                  <img src="b595ae3bd721c860b6aa.png" />
+                  Date
+                </div>
+                <div class="date-options hidden">
+                  <div class="current-date"></div>
+                  <hr />
+                  <div class="list">
+                    <ul>
+                      <li>
+                        <div class="display">
+                          <img src="b595ae3bd721c860b6aa.png" />
+                          <span class="choices" id="num1">Today</span>
+                        </div>
+                        <div class="day"></div>
+                      </li>
+                      <li>
+                        <div class="display">
+                          <img src="d07c9ecea0ad9094855a.png" />
+                          <span class="choices" id="num2">Tomorrow</span>
+                        </div>
+                        <div class="day"></div>
+                      </li>
+                      <li>
+                        <div class="display">
+                          <img src="6a81b56541d97b63b306.png" />
+                          <span class="choices" id="num3">This Weekend</span>
+                        </div>
+                        <div class="day"></div>
+                      </li>
+                    </ul>
+                  </div>
+                  <hr />
+
+                  <div class="date-pickerCont">
+                    <input
+                      type="text"
+                      id="date-picker"
+                      placeholder="Choose date"
+                    />
+                    <img src="b595ae3bd721c860b6aa.png" />
+                  </div>
+                  <hr />
+                  <div class="extra">
+                    <div class="time">
+                      <div class="timeBTN">
+                        <img src="45b0736b20ad251e6cdb.png" /><span id="showTime"
+                          >Time</span
+                        >
+                      </div>
+
+                      <div class="timeDisplay hidden">
+                        <div class="timeForm">
+                          <label for="times">Time:</label>
+                          <input type="time" id="times" />
+                        </div>
+                        <hr />
+                        <div class="buttonsTimeDisplay">
+                          <button
+                            class="buttonsTime"
+                            id="cancelBtn"
+                            type="button"
+                          >
+                            Cancel
+                          </button>
+                          <button type="button" class="buttonsTime" id="save">
+                            Save
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <input type="hidden" id="date-value" name="date" />
+
+              <div class="custom-select card">
+                <div class="selected">
+                  <img src="73b9a3a371f41e48cb68.png" alt="flag" />
+                  <span>Priority</span>
+                </div>
+
+                <div class="options hidden">
+                  <div data-value="low" class="option">
+                    <img src="73b9a3a371f41e48cb68.png" alt="" />
+                    Low
+                  </div>
+                  <div data-value="medium" class="option">
+                    <img src="ab6f8684051ca19c2ba3.png" alt="" />
+                    Medium
+                  </div>
+                  <div data-value="high" class="option">
+                    <img src="2e08c63d928b845a2354.png" alt="" />
+                    High
+                  </div>
+                </div>
+              </div>
+              <input type="hidden" id="priority" name="priority" />
+            </div>
+          </div>
+          <hr />
+          <div class="submit-cont">
+            <div class="projects custom-projects">
+              <div class="selectedP">
+                <img src="51a615239c99470d03c3.png" />
+                <span>Inbox </span>
+              </div>
+              <div class="optionsP hidden">
+                <div data-value="Work" class="option">
+                  <img src="e16ba6a5c02bdfb55717.png" alt="" />
+                  Work
+                </div>
+                <div data-value="Education" class="option">
+                  <img src="4b2df2a9979be193bf21.png" alt="" />
+                  Education
+                </div>
+                <div data-value="Personal" class="option">
+                  <img src="f7c7ae799b6b1e4da192.png" alt="" />
+                  Personal
+                </div>
+                <div data-value="new" class="option" id="newproject">
+                  <img src="8835a517234a229acd4a.png" alt="" />
+                  New Project
+                  <div class="typeProject hidden" >
+                    <input type="text" placeholder="Project name" id="customProjectInput">
+                    <div class="buttonsAdd">
+                      <button class="projectP" id="x">x</button>
+                      <button class="projectP" id="addP" type="submit">+</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <input type="hidden" id="project" name="project" />
+            <div class="buttons">
+              <button class="buttons" id="cancel">Cancel</button>
+              <button type="submit" class="buttons" id="submit">
+                Add Task
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>

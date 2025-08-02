@@ -84,22 +84,32 @@ const DOM = (() => {
   };
 })();
 
-let projects = {
-  Inbox: [],
-  Work: [],
-  Education: [],
-  Personal: [],
-};
+let projects = loadProjects();
+
+// Check if projects is empty (first time ever)
+if (
+  Object.keys(projects).length === 0 ||
+  !projects.Inbox ||
+  !projects.Work ||
+  !projects.Education ||
+  !projects.Personal
+) {
+  // Initialize with defaults
+  projects = {
+    Inbox: [],
+    Work: [],
+    Education: [],
+    Personal: [],
+  };
+
+  // Save the default into localStorage
+  saveProjects(projects);
+}
 
 console.log(projects);
-projects = loadProjects();
-saveProjects(projects);
 allProjects(projects);
-let customProjects = loadCustomProjects();
-console.log(customProjects);
 
-saveCustomProjects(customProjects);
-customProjects = loadCustomProjects();
+let customProjects = loadCustomProjects();
 console.log(customProjects);
 
 
@@ -1203,13 +1213,24 @@ function loadProjects() {
   let rawProjects;
   try {
     const stored = localStorage.getItem("projects");
-    rawProjects = stored ? JSON.parse(stored) : {};
+    rawProjects = stored ? JSON.parse(stored) : null;
   } catch (e) {
     console.warn("Invalid JSON for 'projects' in localStorage. Resetting.");
-    rawProjects = {};
+    rawProjects = null;
   }
-  const loadedProjects = {};
 
+  // Fallback: return the default structure if localStorage was empty
+  if (!rawProjects) {
+    rawProjects = {
+      Inbox: [],
+      Work: [],
+      Education: [],
+      Personal: [],
+    };
+    localStorage.setItem("projects", JSON.stringify(rawProjects));
+  }
+
+  const loadedProjects = {};
   for (const key in rawProjects) {
     loadedProjects[key] = rawProjects[key].map(
       (obj) =>
@@ -1227,6 +1248,7 @@ function loadProjects() {
 
   return loadedProjects;
 }
+
 
 function calculateCompletedCount(projects) {
   let count = 0;
