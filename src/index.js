@@ -106,6 +106,9 @@ if (
   saveProjects(projects);
 }
 
+
+
+
 console.log(projects);
 allProjects(projects);
 
@@ -1065,6 +1068,15 @@ function renderList(sentList, list, project) {
       // Update status right away
       task.status = checkbox.checked ? "complete" : "not complete";
 
+        sentList.sort((a, b) => {
+          if (a.status === b.status) return 0;
+          if (a.status === "complete") return 1; // a after b
+          if (b.status === "complete") return -1; // a before b
+        }
+    );
+      allProjects(projects);
+        
+
       const completedCount = sentList.filter(
         (t) => t.status === "complete"
       ).length;
@@ -1188,10 +1200,7 @@ function renderList(sentList, list, project) {
         editProject = true;
       });
       DOM.add_task_cont.classList.toggle("hidden");
-    });
-
-    //const sentlist = sortTasks(sentList);
-    //allProjects(sentlist);
+    }); 
   }
 }
 
@@ -1260,17 +1269,7 @@ function calculateCompletedCount(projects) {
   return count;
 }
 
-function sortTasks(taskArray) {
-  return taskArray.slice().sort((a, b) => {
-    const aStatus = a._status || a.status;
-    const bStatus = b._status || b.status;
 
-    if (aStatus === "complete" && bStatus !== "complete") return 1;
-    if (aStatus !== "complete" && bStatus === "complete") return -1;
-
-    return 0;
-  });
-}
 
 function populateForm(task) {
   DOMUI.titleInput.value = task.title;
@@ -1438,7 +1437,9 @@ function addProjectOptionToDropdown(name) {
   span.textContent = name;
   div.appendChild(img);
   div.appendChild(span);
-  DOM.projectDisplay.appendChild(div);
+ const addNewBtn = document.getElementById("newproject"); // or use DOM reference
+ DOM.projectDisplay.insertBefore(div, addNewBtn);
+
   
 
   // Make it selectable
