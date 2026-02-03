@@ -957,6 +957,8 @@ function formReset() {
   DOM.showProject.appendChild(img3);
   DOM.showProject.appendChild(text3);
   DOM.projectShow.style.border = "none";
+
+  DOM.submit.textContent = "Add Task";
 }
 let editingTask = null;
 
